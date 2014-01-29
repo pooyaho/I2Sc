@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application name="form1" xmlns="xviewfd.xsd" dataModel="com.casp.poo.Class1" domain="com.casp.pooya"
-             title="adfdf" layout="dg.layout1">
+<application name="form1" xmlns="/home/pooya/projects/I2Sc/src/main/resource/schemas/xviewfd.xsd" dataModel="com.casp.poo.Class1" domain="com.casp.pooya"
+             title="title" layout="dg.layout1">
+
+
     <!--<layout>-->
     <!--<grid flow="horizontal">-->
     <!--<row height="12">-->

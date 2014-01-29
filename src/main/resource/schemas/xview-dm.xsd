@@ -2,7 +2,7 @@
            xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:main="xview-dm.xsd"
            targetNamespace="xview-dm.xsd">
     <xs:element name="dataModel" type="main:DataModelType"/>
-
+<!-- types is : boolean, list,map, composition, dateTime, currency, decimal,file,double,duration,integer, string-->
     <xs:group name="data-types">
         <xs:sequence>
             <xs:choice maxOccurs="unbounded">
