@@ -32,7 +32,7 @@
 
     <app:elements>
         <app:string name="firstname">
-            <app:restriction>
+            <app:restriction combination="all">
                 <app:notNull/>
                 <app:regex>^\w*$</app:regex>
                 <app:type/>

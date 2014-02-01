@@ -7,7 +7,9 @@ package ir.phsys.xview.model
  *         Time: 12:35 PM
  */
 
-class Element(val elemType: String, var restriction: Restrictions, val attributes: Map[String, String])
+class Element(var elemType: String = "",
+              var restrictions: List[Restriction] = List.empty[Restriction],
+              var attributes: Map[String, String] = Map.empty[String, String])
 
 abstract class ElementType
 

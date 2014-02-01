@@ -11,9 +11,8 @@ import org.scalatest.FunSuite
 class XmlObjectifyTest extends FunSuite {
 
   test("Test objectify") {
-    val o = XmlObjectify("/home/pooya/projects/I2Sc/src/main/resource/main.xml")
-    val dm = o.generateDataModelGraph()
-    dm foreach println
+    val o=XmlObjectify("/home/pooya/projects/I2Sc/src/main/resource")
+
 
   }
 

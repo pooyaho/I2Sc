@@ -7,7 +7,9 @@ package ir.phsys.xview.model
  *         Date: 1/29/14
  *         Time: 2:32 PM
  */
-class Restrictions(val attributes: Map[String, String], var restriction: Map[String, String])
+//class Restrictions(/*var attributes: Map[String, String] = Map.empty[String, String], */var restriction: Map[String,
+//  String] = Map.empty[String, String])
+
 
 abstract class RestrictionMode
 

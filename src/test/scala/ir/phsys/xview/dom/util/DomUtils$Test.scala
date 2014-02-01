@@ -1,6 +1,7 @@
 package ir.phsys.xview.dom.util
 
 import org.scalatest.FunSuite
+import ir.phsys.xview.model.{Restriction, Element, DataModel}
 
 /**
  * @author : Пуя Гуссейни
@@ -19,7 +20,6 @@ class DomUtils$Test extends FunSuite {
     val map = content.getAttributeAsMap
     println(map)
     assert(map == Map("name" -> "Class1", "domain" -> "com.casp.poo"))
-
   }
 
   test("Test xml text and content") {
@@ -34,33 +34,86 @@ class DomUtils$Test extends FunSuite {
     }
   }
 
-  test("Test data model xml") {
-    (content \\ "dataModel").map {
-      case model => {
-        //      val name = DomUtils.getAttributeValue(dm, "name")
-        //      val domain = DomUtils.getAttributeValue(dm, "domain")
+  test("Test data model xml using for") {
+    for (domModel <- content \\ "dataModel") {
 
-        (model \\ "elements").map {
-          case e => {
-            e.child.map {
-              case elem =>
-                (elem \\ "restriction").map {
-                  case rest => {
-                    rest.child.map {
-                      case Elem(prefix, label, attribs, scope, Text(text)) => println(elem.label + "  rest is" + label)
-//                      case Elem(prefix, label, attribs, scope, child)=>println("Hey")
-                      case _ => println("Nothing")
-                    }
-                    //                    new Restrictions(rest.getAttributeAsMap, restMap)
-                  }
-                }
-              //                new Element(elem.label, restrictions.head, elem.getAttributeAsMap)
+      //      val name = DomUtils.getAttributeValue(dm, "name")
+      //      val domain = DomUtils.getAttributeValue(dm, "domain")
+      val dm = new DataModel
+      dm.attributes = domModel.getAttributeAsMap
+      for (e <- domModel \ "elements"; domElem <- e.child) domElem match {
+        case x: Elem =>
+          val element = new Element
+
+          element.attributes = x.getAttributeAsMap
+          element.elemType = x.label
+
+          for (r <- x \ "restriction"; attrs = r.getAttributeAsMap) {
+
+            val restriction = new Restriction()
+            restriction.attributes = attrs
+            for (rest <- r.child) rest match {
+              case x: Elem =>
+                restriction.values ++= Map(rest.label -> rest.text)
+              case _ =>
             }
+            element.restrictions :+= restriction
           }
-        }.toList
-        //        new DataModel(model.getAttributeAsMap, elements.flatten)
+
+          dm.elements :+= element
+        case x =>
+      }
+      //    }
+
+      //            elem.child.map {
+      //              case elem =>
+      //                (elem \\ "restriction").map {
+      //                  case rest => {
+      //                    rest.child.map {
+      //                      case Elem(prefix, label, attribs, scope, Text(text)) => println(elem.label + "  rest is" + label)
+      ////                      case Elem(prefix, label, attribs, scope, child)=>println("Hey")
+      //                      case _ =>
+      //                    }
+      //                    //                    new Restrictions(rest.getAttributeAsMap, restMap)
+      //                  }
+      //                }
+      //              //                new Element(elem.label, restrictions.head, elem.getAttributeAsMap)
+      //            }
+    }
+
+//    println(dm)
+  }
+
+
+  test("Test data model xml using map") {
+//    for (domModel <- content \\ "dataModel") {
+//
+//      val dm = new DataModel
+//      dm.attributes = domModel.getAttributeAsMap
+//      (domModel \ "elements").flatMap(e=>e.child).filter(domElement=>domElement.isInstanceOf[Elem]).map(x =>{
+//        element.attributes = x.getAttributeAsMap
+//        element.elemType = x.label
+//
+//        (x \ "restriction").map(r=>{
+//          val attrs = r.getAttributeAsMap
+//          val restValues = r.child.filter (p => p.isInstanceOf[Elem] ).map (p => p.label -> p.text).toMap
+//          new Restriction (attrs, restValues)
+//        })
+//
+//      })
+//        case x: Elem =>
+//          val element = new Element
+//
+
+
+
+        //            restriction.attributes = attrs
+
+        //            element.restrictions :+= restriction
       }
 
-    }
-  }
+//      dm.elements :+= element
+//        case x =>
+//      }
+
 }

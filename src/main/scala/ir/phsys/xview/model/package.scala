@@ -7,5 +7,5 @@ package ir.phsys.xview
  *         Time: 3:12 PM
  */
 package object model {
-  type Restriction = String => String
+//  type Restriction = String => String
 }
