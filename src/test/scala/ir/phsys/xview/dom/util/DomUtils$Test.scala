@@ -1,7 +1,7 @@
 package ir.phsys.xview.dom.util
 
 import org.scalatest.FunSuite
-import ir.phsys.xview.model.{Restriction, Element, DataModel}
+import ir.phsys.xview.model.datamodel.{Restriction, Element, DataModel}
 
 /**
  * @author : Пуя Гуссейни
@@ -57,7 +57,7 @@ class DomUtils$Test extends FunSuite {
                 restriction.values ++= Map(rest.label -> rest.text)
               case _ =>
             }
-            element.restrictions :+= restriction
+            element.restrictions = restriction
           }
 
           dm.elements :+= element
@@ -81,39 +81,38 @@ class DomUtils$Test extends FunSuite {
       //            }
     }
 
-//    println(dm)
+    //    println(dm)
   }
 
 
   test("Test data model xml using map") {
-//    for (domModel <- content \\ "dataModel") {
-//
-//      val dm = new DataModel
-//      dm.attributes = domModel.getAttributeAsMap
-//      (domModel \ "elements").flatMap(e=>e.child).filter(domElement=>domElement.isInstanceOf[Elem]).map(x =>{
-//        element.attributes = x.getAttributeAsMap
-//        element.elemType = x.label
-//
-//        (x \ "restriction").map(r=>{
-//          val attrs = r.getAttributeAsMap
-//          val restValues = r.child.filter (p => p.isInstanceOf[Elem] ).map (p => p.label -> p.text).toMap
-//          new Restriction (attrs, restValues)
-//        })
-//
-//      })
-//        case x: Elem =>
-//          val element = new Element
-//
+    //    for (domModel <- content \\ "dataModel") {
+    //
+    //      val dm = new DataModel
+    //      dm.attributes = domModel.getAttributeAsMap
+    //      (domModel \ "elements").flatMap(e=>e.child).filter(domElement=>domElement.isInstanceOf[Elem]).map(x =>{
+    //        element.attributes = x.getAttributeAsMap
+    //        element.elemType = x.label
+    //
+    //        (x \ "restriction").map(r=>{
+    //          val attrs = r.getAttributeAsMap
+    //          val restValues = r.child.filter (p => p.isInstanceOf[Elem] ).map (p => p.label -> p.text).toMap
+    //          new Restriction (attrs, restValues)
+    //        })
+    //
+    //      })
+    //        case x: Elem =>
+    //          val element = new Element
+    //
 
 
+    //            restriction.attributes = attrs
 
-        //            restriction.attributes = attrs
+    //            element.restrictions :+= restriction
+  }
 
-        //            element.restrictions :+= restriction
-      }
-
-//      dm.elements :+= element
-//        case x =>
-//      }
+  //      dm.elements :+= element
+  //        case x =>
+  //      }
 
 }

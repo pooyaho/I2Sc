@@ -1,5 +1,4 @@
-package ir.phsys.xview.model
-
+package ir.phsys.xview.model.datamodel
 
 /**
  * @author : Пуя Гуссейни

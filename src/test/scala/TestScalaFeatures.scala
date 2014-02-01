@@ -1,4 +1,4 @@
-import ir.phsys.xview.model.DataModel
+import ir.phsys.xview.model.datamodel.DataModel
 import org.scalatest.FunSuite
 
 /**

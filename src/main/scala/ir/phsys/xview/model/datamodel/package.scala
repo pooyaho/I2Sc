@@ -1,4 +1,4 @@
-package ir.phsys.xview
+package ir.phsys.xview.model
 
 /**
  * @author : Пуя Гуссейни
@@ -6,6 +6,6 @@ package ir.phsys.xview
  *         Date: 1/29/14
  *         Time: 3:12 PM
  */
-package object model {
+package object datamodel {
 //  type Restriction = String => String
 }

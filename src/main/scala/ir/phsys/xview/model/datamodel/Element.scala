@@ -1,4 +1,6 @@
-package ir.phsys.xview.model
+package ir.phsys.xview.model.datamodel
+
+import ir.phsys.xview.model.BaseModel
 
 /**
  * @author : Пуя Гуссейни
@@ -8,8 +10,9 @@ package ir.phsys.xview.model
  */
 
 class Element(var elemType: String = "",
-              var restrictions: List[Restriction] = List.empty[Restriction],
+              var restrictions: Restriction = null,
               var attributes: Map[String, String] = Map.empty[String, String])
+  extends BaseModel(attributes)
 
 abstract class ElementType
 
