@@ -1,4 +1,4 @@
-package ir.phsys.xview.dom.exception
+package ir.phsys.xview.xml.exception
 
 /**
  * @author : Пуя Гуссейни

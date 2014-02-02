@@ -1,11 +1,11 @@
-package ir.phsys.xview.dom.exception
+package ir.phsys.xview.xml.parser
 
 /**
  * @author : Пуя Гуссейни
  *         Email : info@pooya-hfp.ir
  *         Date: 1/29/14
- *         Time: 3:56 PM
+ *         Time: 11:12 AM
  */
-class DOMException extends Exception {
+class Parser {
 
 }

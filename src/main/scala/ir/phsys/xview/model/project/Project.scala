@@ -2,7 +2,7 @@ package ir.phsys.xview.model.project
 
 import ir.phsys.xview.model.datamodel.DataModel
 import ir.phsys.xview.model.layout.FormLayout
-import ir.phsys.xview.model.view.{Page, ApplicationForm}
+import ir.phsys.xview.model.view.Page
 import ir.phsys.xview.model.exception.ApplicationAlreadyDefinedException
 
 /**
@@ -14,22 +14,23 @@ import ir.phsys.xview.model.exception.ApplicationAlreadyDefinedException
 class Project {
   private var dataModelMap = Map.empty[String, DataModel]
   private var layoutMap = Map.empty[String, FormLayout]
-  private var application: Option[ApplicationForm] = None
+  private var application: Option[Page] = None
   private var pageMap = Map.empty[String, Page]
 
   def +=(m: DataModel) = {
-    dataModelMap ++= Map(m.getUniqueName, m)
+    dataModelMap ++= Map(m.getUniqueName -> m)
+
   }
 
   def +=(m: FormLayout) = {
-    layoutMap ++= Map(m.getUniqueName, m)
+    layoutMap ++= Map(m.getUniqueName -> m)
   }
 
   def +=(m: Page) = {
-    pageMap ++= Map(m.getUniqueName, m)
+    pageMap ++= Map(m.getUniqueName -> m)
   }
 
-  def +=(m: ApplicationForm) = application match {
+  def setApplication(m: Page) = application match {
     case None => application = Some(m)
     case Some(x) => throw new ApplicationAlreadyDefinedException
   }

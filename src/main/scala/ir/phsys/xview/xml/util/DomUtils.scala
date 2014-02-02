@@ -1,4 +1,4 @@
-package ir.phsys.xview.dom.util
+package ir.phsys.xview.xml.util
 
 /**
  * @author : Пуя Гуссейни
@@ -8,7 +8,7 @@ package ir.phsys.xview.dom.util
  */
 
 import scala.xml._
-import ir.phsys.xview.dom.exception.AttributeNotFoundException
+import ir.phsys.xview.xml.exception.AttributeNotFoundException
 
 object DomUtils {
 

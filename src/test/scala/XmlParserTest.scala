@@ -1,5 +1,5 @@
 import ir.phsys.xview.model.layout.{Cell, Row, GridType, FormLayout}
-import ir.phsys.xview.model.view.{ApplicationForm, Widget}
+import ir.phsys.xview.model.view.{Page, Widget}
 import org.scalatest.FunSuite
 
 /**
@@ -11,7 +11,7 @@ import org.scalatest.FunSuite
 
 
 import scala.xml._
-import ir.phsys.xview.dom.util.DomUtils._
+import ir.phsys.xview.xml.util.DomUtils._
 
 class XmlParserTest extends FunSuite {
   test("Test layout xml") {
@@ -25,7 +25,7 @@ class XmlParserTest extends FunSuite {
   test("Test form xml") {
     val file = XML.loadFile("/home/pooya/projects/I2Sc/src/main/resource/form.xml")
     for (a <- file \\ "application") {
-      val app = new ApplicationForm
+      val app = new Page
       app.attributes = a.getAttributeAsMap
       for (l <- a \ "layout") {
         app.layout = extractLayout(l)
@@ -36,7 +36,6 @@ class XmlParserTest extends FunSuite {
         widget.widgetType = w.label
         app.widgets :+= widget
       })
-
       println(app)
     }
   }

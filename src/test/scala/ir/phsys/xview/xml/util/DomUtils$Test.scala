@@ -1,4 +1,4 @@
-package ir.phsys.xview.dom.util
+package ir.phsys.xview.xml.util
 
 import org.scalatest.FunSuite
 import ir.phsys.xview.model.datamodel.{Restriction, Element, DataModel}

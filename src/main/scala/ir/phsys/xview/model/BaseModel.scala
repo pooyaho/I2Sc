@@ -7,7 +7,7 @@ package ir.phsys.xview.model
  *         Time: 9:24 PM
  */
 trait BaseModel {
-  def  getAttributes: Map[String, String]
+  def getAttributes: Map[String, String]
 
   def getUniqueName = getAttributes.get("domain") match {
     case Some(x) => x + "." + getAttributes.getOrElse("name", "")

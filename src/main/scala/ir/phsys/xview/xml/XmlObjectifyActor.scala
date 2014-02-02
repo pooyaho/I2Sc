@@ -1,4 +1,4 @@
-package ir.phsys.xview.dom
+package ir.phsys.xview.xml
 
 /**
  * @author : Пуя Гуссейни
@@ -8,14 +8,23 @@ package ir.phsys.xview.dom
  */
 
 import scala.xml._
-import ir.phsys.xview.dom.util.DomUtils._
-import ir.phsys.xview.model.view.{Widget, ApplicationForm}
+import ir.phsys.xview.xml.util.DomUtils._
+import ir.phsys.xview.model.view.{Page, Widget}
 import ir.phsys.xview.model.layout.{Cell, Row, GridType, FormLayout}
 import ir.phsys.xview.model.datamodel.{Restriction, Element, DataModel}
 import ir.phsys.xview.model.project.Project
+import akka.actor.Actor
+import scala.util.{Success, Failure, Try}
 
+object XmlObjectifyActor {
 
-class XmlObjectify {
+  case class Objectify(path: String)
+
+  class OperationReplay
+
+  case class OperationFailed(t: Throwable) extends OperationReplay
+
+  case class OperationSucceed(project: Project) extends OperationReplay
 
   //    lst
   //    (XmlObjectify.loadFile \\ "dataModel").map {
@@ -46,44 +55,68 @@ class XmlObjectify {
 
 }
 
-object XmlObjectify {
+class XmlObjectifyActor extends Actor {
 
   import java.io.File
+  import XmlObjectifyActor._
 
-  private var path = ""
-  private val project = new Project
+  //  private var path = ""
 
-  def apply(path: String): Project = {
-    this.path = path
-    recursiveIterateDirectory(path)
-    project
-  }
 
-  def recursiveIterateDirectory(path: String): Unit = {
-    new File(path).listFiles().foreach {
-      case x if x.isDirectory => recursiveIterateDirectory(x.getCanonicalPath)
-      case x if !x.isDirectory =>
-        val loadFile = XML.loadFile(x)
-        loadFile.label match {
-          case "dataModel" =>
-            for (dm <- loadFile \\ loadFile.label) {
-              val datamodel = generateDataModelGraph(dm)
-              project += datamodel
-            }
-          case "application" =>
-            for (dm <- loadFile \\ loadFile.label) {
-              val app = generateApplicationModel(dm)
-              project += app
-            }
+  //  def apply(path: String): Future[Project] = {
+  //    this.path = path
+  //    val f = Future {
+  //      {
+  //        recursiveIterateDirectory(path)
+  //        project
+  //      }
+  //    }
+  //    f
+  //  }
+  def generateProject(path: String): Try[Project] = {
+    val project = new Project
 
-          case "layout" =>
-            for (dm <- loadFile \\ loadFile.label) {
-              val layout = generateLayoutModelGraph(dm)
-              project += layout
-            }
-          case _ =>
-        }
+    def recursiveIterateDirectory(path: String): Unit = {
+
+      new File(path).listFiles().foreach {
+        case x if x.isDirectory => recursiveIterateDirectory(x.getCanonicalPath)
+        case x if !x.isDirectory =>
+          val loadFile = XML.loadFile(x)
+          loadFile.label match {
+
+            case "dataModel" =>
+              for (dm <- loadFile \\ loadFile.label) {
+                val datamodel = generateDataModelGraph(dm)
+                project += datamodel
+              }
+            case "application" =>
+              for (dm <- loadFile \\ loadFile.label) {
+                val app = generatePageModel(dm)
+                project.setApplication(app)
+              }
+
+            case "layout" =>
+              for (dm <- loadFile \\ loadFile.label) {
+                val layout = generateLayoutModelGraph(dm)
+                project += layout
+              }
+
+            case "page" =>
+              for (dm <- loadFile \\ loadFile.label) {
+                val app = generatePageModel(dm)
+                project += app
+              }
+
+            case _ =>
+
+          }
+      }
     }
+    Try({
+      recursiveIterateDirectory(path)
+      println("Completed")
+      project
+    })
   }
 
   def generateDataModelGraph(dataModelNode: Node): DataModel = {
@@ -103,27 +136,24 @@ object XmlObjectify {
         element.elemType = x.label
 
         for (r <- x \ "restriction"; attrs = r.getAttributeAsMap) {
-
           val restriction = new Restriction()
           restriction.attributes = attrs
           for (rest <- r.child) rest match {
             case x: Elem =>
               restriction.values ++= Map(rest.label -> rest.text)
-
             case _ =>
           }
           element.restrictions = restriction
         }
-
         dm.elements :+= element
       case x =>
     }
     dm
   }
 
-  def generateApplicationModel(domApp: Node): ApplicationForm = {
+  def generatePageModel(domApp: Node): Page = {
 
-    val app = new ApplicationForm
+    val app = new Page
     app.attributes = domApp.getAttributeAsMap
     for (l <- domApp \ "layout") {
       app.layout = generateLayoutModelGraph(l)
@@ -141,7 +171,6 @@ object XmlObjectify {
   }
 
   def generateLayoutModelGraph(node: Node): FormLayout = {
-
     val layout = new FormLayout
     layout.attributes = node.getAttributeAsMap
 
@@ -171,5 +200,15 @@ object XmlObjectify {
       layout.gridType = gridType
     }
     layout
+  }
+
+  def receive: Actor.Receive = {
+    case Objectify(path) =>
+      println("Hello")
+      generateProject(path) match {
+        case Success(s) => sender ! OperationSucceed(s)
+        case Failure(f) => sender ! OperationFailed(f)
+      }
+
   }
 }
