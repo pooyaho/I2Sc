@@ -1,4 +1,6 @@
-package ir.phsys.xview.view
+package ir.phsys.xview.model.view
+
+import ir.phsys.xview.model.BaseModel
 
 /**
  * @author : Пуя Гуссейни
@@ -6,6 +8,6 @@ package ir.phsys.xview.view
  *         Date: 2/1/14
  *         Time: 4:23 PM
  */
-class Page {
+abstract class Page extends BaseModel{
 
 }

@@ -1,6 +1,7 @@
 package ir.phsys.xview.model.datamodel
 
 import ir.phsys.xview.model.BaseModel
+import scala.beans.BeanProperty
 
 /**
  * @author : Пуя Гуссейни
@@ -11,8 +12,8 @@ import ir.phsys.xview.model.BaseModel
 
 class Element(var elemType: String = "",
               var restrictions: Restriction = null,
-              var attributes: Map[String, String] = Map.empty[String, String])
-  extends BaseModel(attributes)
+              @BeanProperty var attributes: Map[String, String] = Map.empty[String, String])
+  extends BaseModel
 
 abstract class ElementType
 

@@ -1,5 +1,5 @@
-import ir.phsys.xview.layout.{Cell, Row, GridType, FormLayout}
-import ir.phsys.xview.view.{ApplicationForm, Widget}
+import ir.phsys.xview.model.layout.{Cell, Row, GridType, FormLayout}
+import ir.phsys.xview.model.view.{ApplicationForm, Widget}
 import org.scalatest.FunSuite
 
 /**

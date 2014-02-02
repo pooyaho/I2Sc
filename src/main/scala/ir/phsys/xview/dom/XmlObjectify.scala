@@ -9,9 +9,11 @@ package ir.phsys.xview.dom
 
 import scala.xml._
 import ir.phsys.xview.dom.util.DomUtils._
-import ir.phsys.xview.view.{Widget, ApplicationForm}
-import ir.phsys.xview.layout.{Cell, Row, GridType, FormLayout}
+import ir.phsys.xview.model.view.{Widget, ApplicationForm}
+import ir.phsys.xview.model.layout.{Cell, Row, GridType, FormLayout}
 import ir.phsys.xview.model.datamodel.{Restriction, Element, DataModel}
+import ir.phsys.xview.model.project.Project
+
 
 class XmlObjectify {
 
@@ -49,14 +51,12 @@ object XmlObjectify {
   import java.io.File
 
   private var path = ""
-  private var dataModelMap = Map.empty[String, DataModel]
-  private var layoutMap = Map.empty[String, FormLayout]
+  private val project = new Project
 
-  def apply(path: String): XmlObjectify = {
+  def apply(path: String): Project = {
     this.path = path
     recursiveIterateDirectory(path)
-
-    new XmlObjectify
+    project
   }
 
   def recursiveIterateDirectory(path: String): Unit = {
@@ -66,33 +66,23 @@ object XmlObjectify {
         val loadFile = XML.loadFile(x)
         loadFile.label match {
           case "dataModel" =>
-
             for (dm <- loadFile \\ loadFile.label) {
-
               val datamodel = generateDataModelGraph(dm)
-              dataModelMap ++= Map(datamodel.getUniqueName -> datamodel)
+              project += datamodel
             }
           case "application" =>
+            for (dm <- loadFile \\ loadFile.label) {
+              val app = generateApplicationModel(dm)
+              project += app
+            }
 
           case "layout" =>
             for (dm <- loadFile \\ loadFile.label) {
-
               val layout = generateLayoutModelGraph(dm)
-              layoutMap ++= Map(layout.getUniqueName -> layout)
+              project += layout
             }
           case _ =>
         }
-      //        if ((loadFile \\ "dataModel").length > 0) {
-      //
-      //
-      //        } else if ((loadFile \\ "application").length > 0) {
-      //
-      //        } else if ((loadFile \\ "layout").length > 0) {
-      //
-      //        } else {
-      //          //          throw new UndefinedXmlDataException
-      //        }
-
     }
   }
 
@@ -131,35 +121,23 @@ object XmlObjectify {
     dm
   }
 
-  //    lst
-  //  }
-
-  def generatePageModelGraph(domApp: Node) = {
+  def generateApplicationModel(domApp: Node): ApplicationForm = {
 
     val app = new ApplicationForm
     app.attributes = domApp.getAttributeAsMap
-    for (e <- domApp \ "elements"; domElem <- e.child) domElem match {
-      case x: Elem =>
-        val element = new Element
-
-        element.attributes = x.getAttributeAsMap
-        element.elemType = x.label
-
-        for (r <- x \ "restriction"; attrs = r.getAttributeAsMap) {
-
-          val restriction = new Restriction()
-          restriction.attributes = attrs
-          for (rest <- r.child) rest match {
-            case x: Elem =>
-              restriction.values ++= Map(rest.label -> rest.text)
-
-            case _ =>
-          }
-          element.restrictions = restriction
-        }
-
-      case x =>
+    for (l <- domApp \ "layout") {
+      app.layout = generateLayoutModelGraph(l)
     }
+    domApp.child.filter(p => p.label != "layout" && p.isInstanceOf[Elem]).foreach(w => {
+      val widget = new Widget
+      widget.attributes = w.getAttributeAsMap
+      widget.widgetType = w.label
+      for (l <- w \ "layout") {
+        widget.layout = generateLayoutModelGraph(l)
+      }
+      app.widgets :+= widget
+    })
+    app
   }
 
   def generateLayoutModelGraph(node: Node): FormLayout = {
@@ -171,13 +149,13 @@ object XmlObjectify {
       val gridType = new GridType
       gridType.attributes = g.getAttributeAsMap
 
-      for (r <- g \\ "row") {
+      for (r <- g \ "row") {
         val row = new Row
         row.attributes = r.getAttributeAsMap
-        for (c <- r \\ "cell") {
+        for (c <- r \ "cell") {
           val cell = new Cell
           cell.attributes = c.getAttributeAsMap
-          for (w <- c.child) {
+          for (w <- c.child.filter(p => p.isInstanceOf[Elem])) {
             val widget = new Widget
             widget.attributes = w.getAttributeAsMap
             widget.widgetType = w.label

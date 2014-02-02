@@ -1,6 +1,7 @@
 package ir.phsys.xview.model.datamodel
 
 import ir.phsys.xview.model.BaseModel
+import scala.beans.BeanProperty
 
 /**
  * @author : Пуя Гуссейни
@@ -8,5 +9,5 @@ import ir.phsys.xview.model.BaseModel
  *         Date: 2/1/14
  *         Time: 11:18 AM
  */
-class Restriction(var attributes: Map[String, String] = Map.empty[String, String],
-                  var values: Map[String, String] = Map.empty[String, String]) extends BaseModel(attributes)
+class Restriction(@BeanProperty var attributes: Map[String, String] = Map.empty[String, String],
+                  var values: Map[String, String] = Map.empty[String, String]) extends BaseModel
