@@ -1,7 +1,7 @@
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:main="xview-dm.xsd"
            targetNamespace="xview-dm.xsd">
-    <xs:element name="dataModel" type="main:DataModelType"/>
+    <xs:element name="DataModel" type="main:DataModelType"/>
 <!-- types is : boolean, list,map, composition, dateTime, currency, decimal,file,double,duration,integer, string-->
     <xs:group name="data-types">
         <xs:sequence>
@@ -175,7 +175,8 @@
                         <xs:element type="main:ListRestriction" name="listRestriction" minOccurs="0"/>
                         <xs:element type="main:StringRestriction" name="stringRestriction" minOccurs="0"/>
                         <xs:element type="main:NumericRestriction" name="numericRestriction" minOccurs="0"/>
-                        <xs:element type="main:BaseDataModelType" name="type" minOccurs="0"/>
+                        <!--<xs:element type="main:BaseDataModelType" name="type" minOccurs="0"/>-->
+                        <xs:element type="main:BaseDataModelType" name="DataModel" minOccurs="0"/>
                     </xs:choice>
                 </xs:sequence>
                 <!--<xs:attribute type="main:nameType" name="name" use="optional" />-->

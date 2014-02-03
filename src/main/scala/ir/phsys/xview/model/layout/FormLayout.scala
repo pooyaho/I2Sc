@@ -10,8 +10,8 @@ import scala.beans.BeanProperty
  *         Date: 2/1/14
  *         Time: 4:27 PM
  */
-case class FormLayout(@BeanProperty var attributes: Map[String, String] = Map.empty[String, String],
-                      var gridType: GridType = null) extends BaseModel
+case class Layout(@BeanProperty var attributes: Map[String, String] = Map.empty[String, String],
+                  var gridType: Option[GridType] = None) extends BaseModel
 
 case class GridType(@BeanProperty var attributes: Map[String, String] = Map.empty[String, String],
                     var rows: List[Row] = List.empty[Row]) extends BaseModel
@@ -21,4 +21,4 @@ case class Row(@BeanProperty var attributes: Map[String, String] = Map.empty[Str
 
 case class Cell(@BeanProperty var attributes: Map[String, String] = Map.empty[String, String],
                 var widgets: List[Widget] = List.empty[Widget],
-                var formLayout: FormLayout = null) extends BaseModel
+                var layout: Option[Layout] = None) extends BaseModel

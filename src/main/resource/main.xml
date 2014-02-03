@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<app:dataModel name="Class1" domain="com.casp.poo" xmlns:app="/home/pooya/projects/I2Sc/src/main/resource/schemas/xview-dm.xsd">
-    <app:type name="AddressType">
+<app:DataModel name="Class1" domain="com.casp.poo"
+               xmlns:app="/home/pooya/projects/I2Sc/src/main/resource/schemas/xview-dm.xsd">
+    <app:DataModel name="AddressType">
         <app:elements>
             <app:integer name="zipcode">
                 <app:restriction>
@@ -28,7 +29,7 @@
                 </app:restriction>
             </app:string>
         </app:elements>
-    </app:type>
+    </app:DataModel>
 
     <app:elements>
         <app:string name="firstname">
@@ -56,4 +57,4 @@
 
         <app:composition name="address" typename="AddressType"/>
     </app:elements>
-</app:dataModel>
+</app:DataModel>

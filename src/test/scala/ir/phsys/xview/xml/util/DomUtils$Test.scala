@@ -57,7 +57,7 @@ class DomUtils$Test extends FunSuite {
                 restriction.values ++= Map(rest.label -> rest.text)
               case _ =>
             }
-            element.restrictions = restriction
+            element.restrictions = Some(restriction)
           }
 
           dm.elements :+= element

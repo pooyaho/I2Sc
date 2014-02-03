@@ -1,6 +1,6 @@
 package ir.phsys.xview.model.view
 
-import ir.phsys.xview.model.layout.FormLayout
+import ir.phsys.xview.model.layout.Layout
 import ir.phsys.xview.model.BaseModel
 import scala.beans.BeanProperty
 
@@ -14,7 +14,7 @@ import scala.beans.BeanProperty
 
 
 case class Page(@BeanProperty var attributes: Map[String, String] = Map.empty[String, String],
-           var layout: FormLayout = null,
+           var layout: Option[Layout] = None,
            var widgets: List[Widget] = List.empty[Widget])
   extends BaseModel
 

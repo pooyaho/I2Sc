@@ -10,10 +10,10 @@ package ir.phsys.xview.model.datamodel
 //  String] = Map.empty[String, String])
 
 
-abstract class RestrictionMode
-
-case object Any extends RestrictionMode
-
-case object All extends RestrictionMode
-
-case object None extends RestrictionMode
+//abstract class RestrictionMode
+//
+//case object Any extends RestrictionMode
+//
+//case object All extends RestrictionMode
+//
+//case object None extends RestrictionMode

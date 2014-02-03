@@ -6,6 +6,6 @@ package ir.phsys.xview.model.exception
  *         Date: 2/2/14
  *         Time: 12:23 PM
  */
-class ModelException extends Exception{
+class ModelException(message:String) extends Exception(message){
 
 }

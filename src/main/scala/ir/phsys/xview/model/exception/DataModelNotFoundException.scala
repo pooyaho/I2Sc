@@ -6,6 +6,6 @@ package ir.phsys.xview.model.exception
  *         Date: 2/2/14
  *         Time: 12:23 PM
  */
-class ApplicationAlreadyDefinedException (message:String) extends ModelException(message) {
+class DataModelNotFoundException(message:String) extends ModelException(message) {
 
 }

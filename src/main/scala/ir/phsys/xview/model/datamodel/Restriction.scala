@@ -10,7 +10,8 @@ import scala.beans.BeanProperty
  *         Time: 11:18 AM
  */
 class Restriction(@BeanProperty var attributes: Map[String, String] = Map.empty[String, String],
-                  var values: Map[String, String] = Map.empty[String, String]) extends BaseModel
+                  var values: Map[String, String] = Map.empty[String, String])
+  extends BaseModel
 
 
 //class Test(a: Int, b: String) {

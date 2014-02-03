@@ -3,14 +3,15 @@
            xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:main="xviewfd.xsd"
            targetNamespace="xviewfd.xsd">
 
-    <xs:element name="page" type="main:pageType" xmlns:main="/home/pooya/projects/I2Sc/src/main/resource/schemas/xviewfd.xsd"/>
-    <xs:element name="application" type="main:pageType" xmlns:main="/home/pooya/projects/I2Sc/src/main/resource/schemas/xviewfd.xsd"/>
+    <xs:element name="page" type="main:pageType" xmlns:main="xviewfd.xsd"/>
+    <xs:element name="application" type="main:pageType" xmlns:main="xviewfd.xsd"/>
 
     <xs:complexType name="rowType">
         <xs:sequence>
             <xs:element type="main:colType" name="cell" maxOccurs="unbounded" minOccurs="1"
-                        xmlns:main="/home/pooya/projects/I2Sc/src/main/resource/schemas/xviewfd.xsd"/>
+                        xmlns:main="xviewfd.xsd"/>
         </xs:sequence>
+
         <xs:attribute type="xs:positiveInteger" name="height" use="optional"/>
     </xs:complexType>
 

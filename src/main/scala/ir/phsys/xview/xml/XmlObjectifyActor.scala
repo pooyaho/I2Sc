@@ -9,12 +9,18 @@ package ir.phsys.xview.xml
 
 import scala.xml._
 import ir.phsys.xview.xml.util.DomUtils._
-import ir.phsys.xview.model.view.{Page, Widget}
-import ir.phsys.xview.model.layout.{Cell, Row, GridType, FormLayout}
+import ir.phsys.xview.model.layout._
 import ir.phsys.xview.model.datamodel.{Restriction, Element, DataModel}
 import ir.phsys.xview.model.project.Project
 import akka.actor.Actor
-import scala.util.{Success, Failure, Try}
+import scala.util.Try
+import ir.phsys.xview.model.layout.GridType
+import ir.phsys.xview.model.view.Page
+import scala.util.Failure
+import ir.phsys.xview.model.layout.Cell
+import ir.phsys.xview.model.layout.Row
+import scala.util.Success
+import ir.phsys.xview.model.view.Widget
 
 object XmlObjectifyActor {
 
@@ -24,7 +30,7 @@ object XmlObjectifyActor {
 
   case class OperationFailed(t: Throwable) extends OperationReplay
 
-  case class OperationSucceed(project: Project) extends OperationReplay
+  case object OperationSucceed extends OperationReplay
 
   //    lst
   //    (XmlObjectify.loadFile \\ "dataModel").map {
@@ -143,7 +149,7 @@ class XmlObjectifyActor extends Actor {
               restriction.values ++= Map(rest.label -> rest.text)
             case _ =>
           }
-          element.restrictions = restriction
+          element.restrictions = Some(restriction)
         }
         dm.elements :+= element
       case x =>
@@ -156,22 +162,22 @@ class XmlObjectifyActor extends Actor {
     val app = new Page
     app.attributes = domApp.getAttributeAsMap
     for (l <- domApp \ "layout") {
-      app.layout = generateLayoutModelGraph(l)
+      app.layout = Some(generateLayoutModelGraph(l))
     }
     domApp.child.filter(p => p.label != "layout" && p.isInstanceOf[Elem]).foreach(w => {
       val widget = new Widget
       widget.attributes = w.getAttributeAsMap
       widget.widgetType = w.label
       for (l <- w \ "layout") {
-        widget.layout = generateLayoutModelGraph(l)
+        widget.layout = Some(generateLayoutModelGraph(l))
       }
       app.widgets :+= widget
     })
     app
   }
 
-  def generateLayoutModelGraph(node: Node): FormLayout = {
-    val layout = new FormLayout
+  def generateLayoutModelGraph(node: Node): Layout = {
+    val layout = new Layout
     layout.attributes = node.getAttributeAsMap
 
     for (g <- node \ "grid") {
@@ -191,13 +197,13 @@ class XmlObjectifyActor extends Actor {
             cell.widgets :+= widget
           }
           for (l <- c \ "layout") {
-            cell.formLayout = generateLayoutModelGraph(l)
+            cell.layout = Some(generateLayoutModelGraph(l))
           }
           row.cells :+= cell
         }
         gridType.rows :+= row
       }
-      layout.gridType = gridType
+      layout.gridType = Some(gridType)
     }
     layout
   }
@@ -206,7 +212,7 @@ class XmlObjectifyActor extends Actor {
     case Objectify(path) =>
       println("Hello")
       generateProject(path) match {
-        case Success(s) => sender ! OperationSucceed(s)
+        case Success(s) => sender ! OperationSucceed
         case Failure(f) => sender ! OperationFailed(f)
       }
 

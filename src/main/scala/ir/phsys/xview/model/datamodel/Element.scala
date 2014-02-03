@@ -11,7 +11,7 @@ import scala.beans.BeanProperty
  */
 
 class Element(var elemType: String = "",
-              var restrictions: Restriction = null,
+              var restrictions: Option[Restriction] = None,
               @BeanProperty var attributes: Map[String, String] = Map.empty[String, String])
   extends BaseModel
 

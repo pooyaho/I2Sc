@@ -1,4 +1,4 @@
-import ir.phsys.xview.model.layout.{Cell, Row, GridType, FormLayout}
+import ir.phsys.xview.model.layout.{Cell, Row, GridType, Layout}
 import ir.phsys.xview.model.view.{Page, Widget}
 import org.scalatest.FunSuite
 
@@ -28,7 +28,7 @@ class XmlParserTest extends FunSuite {
       val app = new Page
       app.attributes = a.getAttributeAsMap
       for (l <- a \ "layout") {
-        app.layout = extractLayout(l)
+        app.layout = Some(extractLayout(l))
       }
       a.child.filter(p => p.label != "layout").foreach(w => {
         val widget = new Widget
@@ -40,8 +40,8 @@ class XmlParserTest extends FunSuite {
     }
   }
 
-  def extractLayout(node: Node): FormLayout = {
-    val layout = new FormLayout
+  def extractLayout(node: Node): Layout = {
+    val layout = new Layout
     layout.attributes = node.getAttributeAsMap
 
     for (g <- node \ "grid") {
@@ -66,7 +66,7 @@ class XmlParserTest extends FunSuite {
 
         gridType.rows :+= row
       }
-      layout.gridType = gridType
+      layout.gridType = Some(gridType)
     }
     layout
   }
