@@ -4,6 +4,7 @@ import ir.phsys.xview.model.BaseModel
 import scala.beans.BeanProperty
 import ir.phsys.xview.model.exception.DataModelAlreadyDefinedException
 
+
 /**
  * @author : Пуя Гуссейни
  *         Email : info@pooya-hfp.ir
@@ -16,14 +17,15 @@ class DataModel(@BeanProperty var attributes: Map[String, String] = Map.empty[St
   def containsInnerClass = dataModels.length > 0
 }
 
-class DataModels() {
-  private var dataModelMap = Map.empty[String, DataModel]
+class DataModels extends Map[String, DataModel] {
+  //  private var dataModelMap = Map.empty[String, DataModel]
   private var nameSet = Set.empty[String]
 
+  //769
   def +=(m: DataModel) = {
-    if (dataModelMap.contains(m.getUniqueName))
+    if (contains(m.getUniqueName))
       throw new DataModelAlreadyDefinedException(s"Data model ${m.getUniqueName}")
-    dataModelMap ++= Map(m.getUniqueName -> m)
+    this ++= Map(m.getUniqueName -> m)
     nameSet += m.getUniqueName
 
     def recursivelyAddInnerModels(model: DataModel): Unit = {
@@ -42,13 +44,16 @@ class DataModels() {
     recursivelyAddInnerModels(m)
   }
 
-  def contains(name: String, recursive: Boolean = false): Unit = {
-    var result = dataModelMap.contains(name)
-
-    if (recursive) {
-      result ||= nameSet.contains(name)
-    }
-    result
+  def contains(name: String, recursive: Boolean = false): Unit = contains(name) match {
+    case x => if (x && recursive) x || nameSet.contains(name)
+    else x
   }
 
+  def get(key: String): Option[DataModel] = super.get(key)
+
+  def iterator: Iterator[(String, DataModel)] = this.iterator
+
+  def -(key: String): Map[String, DataModel] = super.-(key)
+
+  def +[B1 >: DataModel](kv: (String, B1)): Map[String, B1] = super.+(kv)
 }

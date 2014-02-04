@@ -43,7 +43,7 @@ class AnalyzerActor extends Actor {
 
       checkPageAttributes(pages)
       checkLayoutAttributes(project.getLayoutMap.values.toList)
-      checkDataModelAttributes(project.getDataModelMap.values.toList)
+      checkDataModelAttributes(project.getDataModels.values.toList)
     }
 
     pages.foreach(page => {

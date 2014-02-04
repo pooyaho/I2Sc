@@ -1,9 +1,9 @@
 package ir.phsys.xview.model.project
 
-import ir.phsys.xview.model.datamodel.DataModel
+import ir.phsys.xview.model.datamodel.DataModels
 import ir.phsys.xview.model.layout.Layout
 import ir.phsys.xview.model.view.Page
-import ir.phsys.xview.model.exception.{PageAlreadyDefinedException, LayoutAlreadyDefinedException, DataModelAlreadyDefinedException, ApplicationAlreadyDefinedException}
+import ir.phsys.xview.model.exception.{PageAlreadyDefinedException, LayoutAlreadyDefinedException, ApplicationAlreadyDefinedException}
 
 /**
  * @author : Пуя Гуссейни
@@ -15,8 +15,7 @@ class Project {
   private var layoutMap = Map.empty[String, Layout]
   private var application: Option[Page] = None
   private var pageMap = Map.empty[String, Page]
-
-
+  private val dataModels = new DataModels
 
 
   def +=(m: Layout) = {
@@ -32,6 +31,8 @@ class Project {
     pageMap ++= Map(m.getUniqueName -> m)
   }
 
+
+
   def setApplication(m: Page) = application match {
     case None =>
       if (pageMap.contains(m.getUniqueName))
@@ -44,7 +45,7 @@ class Project {
 
   def getLayoutMap = layoutMap
 
-  def getDataModelMap = dataModelMap
+  def getDataModels = dataModels
 
   def getPageMap = pageMap
 
