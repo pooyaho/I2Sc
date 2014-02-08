@@ -1,0 +1,18 @@
+<%var dataModel:ir.phsys.xview.model.datamodel.DataModel%>
+<%--var packageName:String --%>
+package ${dataModel.attributes("domain")} ;
+class ${dataModel.attributes("name")} {
+#for ( field<- dataModel.elements)
+    private ${field.elemType} ${field.getAttributes()("name")};
+#end
+
+#for ( field<- dataModel.elements;fieldName=field.getAttributes()("name"))
+    public void set${fieldName.capitalize}(${field.elemType} ${fieldName}){
+        this.${fieldName}=${fieldName};
+    }
+    public ${field.elemType} get${fieldName.capitalize}(){
+        return this.${fieldName};
+    }
+#end
+}
+

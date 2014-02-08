@@ -17,6 +17,8 @@ trait ModelContainer[A, B] {
     else x
   }
 
+  def iterate = map.iterator
+
   def +=(m: B): Unit
 
   def values = map.values

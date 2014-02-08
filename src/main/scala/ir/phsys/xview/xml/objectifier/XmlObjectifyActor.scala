@@ -1,4 +1,4 @@
-package ir.phsys.xview.xml
+package ir.phsys.xview.xml.objectifier
 
 /**
  * @author : Пуя Гуссейни
@@ -12,7 +12,7 @@ import ir.phsys.xview.xml.util.DomUtils._
 import ir.phsys.xview.model.layout._
 import ir.phsys.xview.model.datamodel.{Restriction, Element, DataModel}
 import ir.phsys.xview.model.project.Project
-import akka.actor.Actor
+import akka.actor.{Props, ActorRef, Actor}
 import scala.util.Try
 import ir.phsys.xview.model.layout.GridType
 import ir.phsys.xview.model.view.Page
@@ -21,6 +21,8 @@ import ir.phsys.xview.model.layout.Cell
 import ir.phsys.xview.model.layout.Row
 import scala.util.Success
 import ir.phsys.xview.model.view.Widget
+import ir.phsys.xview.analyze.actor.AnalyzerActor.Analyze
+import grizzled.slf4j.Logger
 
 object XmlObjectifyActor {
 
@@ -43,6 +45,7 @@ object XmlObjectifyActor {
   //            e.child.map {
   //              case elem=>
   //              val restrictions = (elem \ "restriction").map {
+  //
   //                case rest => {
   //                  val restMap = rest.child.map {
   //                    case Elem(prefix, label, attribs, scope, Text(text)) => label -> text
@@ -58,17 +61,16 @@ object XmlObjectifyActor {
   //        new DataModel(model.getAttributeAsMap, elements.flatten)
   //      }
   //    }
-
+  def props(analyzerActor: ActorRef, id: Int): Props = Props(new XmlObjectifyActor(analyzerActor, id))
 }
 
-class XmlObjectifyActor extends Actor {
+class XmlObjectifyActor(analyzerActor: ActorRef, id: Int) extends Actor {
+  val logger = Logger[this.type]
 
   import java.io.File
   import XmlObjectifyActor._
 
   //  private var path = ""
-
-
   //  def apply(path: String): Future[Project] = {
   //    this.path = path
   //    val f = Future {
@@ -83,11 +85,16 @@ class XmlObjectifyActor extends Actor {
     val project = new Project
 
     def recursiveIterateDirectory(path: String): Unit = {
+      logger.info(s"Path is $path")
 
-      new File(path).listFiles().foreach {
+      new File(path).listFiles().filter(p=>p.getName.endsWith(".xml")).foreach {
         case x if x.isDirectory => recursiveIterateDirectory(x.getCanonicalPath)
         case x if !x.isDirectory =>
+          logger.info(s"In path is ${x.getAbsolutePath}")
           val loadFile = XML.loadFile(x)
+
+
+
           loadFile.label match {
 
             case "dataModel" =>
@@ -210,11 +217,11 @@ class XmlObjectifyActor extends Actor {
 
   def receive: Actor.Receive = {
     case Objectify(path) =>
-      println("Hello")
-      generateProject(path) match {
+      val project = generateProject(path)
+      project match {
         case Success(s) => sender ! OperationSucceed
+          analyzerActor ! Analyze(s)
         case Failure(f) => sender ! OperationFailed(f)
       }
-
   }
 }

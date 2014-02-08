@@ -1,6 +1,6 @@
 package ir.phsys.xview.analyze.actor
 
-import akka.actor.Actor
+import akka.actor.{Props, ActorRef, Actor}
 import ir.phsys.xview.model.project.Project
 import ir.phsys.xview.analyze.exception.AttributeNotFoundException
 import ir.phsys.xview.model.view.Page
@@ -8,7 +8,10 @@ import ir.phsys.xview.model.datamodel.DataModel
 import ir.phsys.xview.model.layout.Layout
 import ir.phsys.xview.model.BaseModel
 import scala.util.{Failure, Success, Try}
-import ir.phsys.xview.xml.XmlObjectifyActor.{OperationSucceed, OperationFailed}
+import ir.phsys.xview.xml.objectifier.XmlObjectifyActor
+import XmlObjectifyActor.{OperationSucceed, OperationFailed}
+import ir.phsys.xview.generator.CodeGenerator.Generate
+import grizzled.slf4j.Logger
 
 /**
  * @author : Пуя Гуссейни
@@ -22,9 +25,11 @@ object AnalyzerActor {
 
   case class Analyze(project: Project)
 
+  def props(codeGeneratorActor: ActorRef, id: Int):Props = Props(new AnalyzerActor(codeGeneratorActor, id))
 }
 
-class AnalyzerActor(id: Int) extends Actor {
+class AnalyzerActor(codeGeneratorActor: ActorRef, id: Int) extends Actor {
+  val logger=Logger[this.type]
 
   import AnalyzerActor._
   import ir.phsys.xview.analyze.ConstantAttributes._
@@ -33,8 +38,10 @@ class AnalyzerActor(id: Int) extends Actor {
     case Analyze(p) =>
       Try(analyzeProject(p)) match {
         case Success(s) => sender ! OperationSucceed(id)
-
-        case Failure(f) => sender ! OperationFailed(f)
+          codeGeneratorActor ! Generate(p)
+        case Failure(f) =>
+          logger.warn("Failure during analyzing!",f)
+          sender ! OperationFailed(f)
       }
   }
 
@@ -87,8 +94,8 @@ class AnalyzerActor(id: Int) extends Actor {
 
   }
 
-  private def checkPageAttributes(p: List[Page]) = {
-    p.foreach(page => {
+  private def checkPageAttributes(pages: List[Page]) = {
+    pages.foreach(page => {
       PageMandatoryAttributes.intersect(page.attributes.keys.toList)
       .foreach(m => throw new AttributeNotFoundException(m))
       checkElementAttributes(page.widgets)
@@ -142,7 +149,6 @@ class AnalyzerActor(id: Int) extends Actor {
     p foreach (elem => {
       ElementMandatoryAttributes.intersect(elem.getAttributes.keys.toList)
       .foreach(m => throw new AttributeNotFoundException(m))
-
     })
   }
 

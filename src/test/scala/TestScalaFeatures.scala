@@ -8,7 +8,10 @@ import scala.collection.MapLike
  *         Time: 12:29 PM
  */
 class TestScalaFeatures extends FunSuite {
-
+  test("Test list minus"){
+    val result=List(1,2)-List(1)
+//    assert(result==)
+  }
 }
 
 //class Substitution[A, B](val m: Map[A, B])

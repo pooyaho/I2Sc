@@ -6,7 +6,8 @@ import akka.actor.{Props, ActorSystem}
 import akka.testkit.TestKit
 import org.scalatest.matchers.ShouldMatchers
 import akka.testkit.ImplicitSender
-import ir.phsys.xview.xml.XmlObjectifyActor._
+import ir.phsys.xview.xml.objectifier.XmlObjectifyActor
+import XmlObjectifyActor._
 import scala.concurrent.duration._
 
 
