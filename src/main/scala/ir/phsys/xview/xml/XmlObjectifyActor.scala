@@ -30,7 +30,7 @@ object XmlObjectifyActor {
 
   case class OperationFailed(t: Throwable) extends OperationReplay
 
-  case object OperationSucceed extends OperationReplay
+  case class OperationSucceed(id: Int) extends OperationReplay
 
   //    lst
   //    (XmlObjectify.loadFile \\ "dataModel").map {
@@ -93,24 +93,24 @@ class XmlObjectifyActor extends Actor {
             case "dataModel" =>
               for (dm <- loadFile \\ loadFile.label) {
                 val datamodel = generateDataModelGraph(dm)
-                project += datamodel
+                project.getDataModels += datamodel
               }
             case "application" =>
               for (dm <- loadFile \\ loadFile.label) {
                 val app = generatePageModel(dm)
-                project.setApplication(app)
+                project.getPages.setApplication(app)
               }
 
             case "layout" =>
               for (dm <- loadFile \\ loadFile.label) {
                 val layout = generateLayoutModelGraph(dm)
-                project += layout
+                project.getLayouts += layout
               }
 
             case "page" =>
               for (dm <- loadFile \\ loadFile.label) {
                 val app = generatePageModel(dm)
-                project += app
+                project.getPages += app
               }
 
             case _ =>
@@ -131,7 +131,7 @@ class XmlObjectifyActor extends Actor {
     dm.attributes = dataModelNode.getAttributeAsMap
     println(dm.attributes)
     for (defType <- dataModelNode \ "type") {
-      dm.definedTypes +:= generateDataModelGraph(defType)
+      dm.dataModels +:= generateDataModelGraph(defType)
     }
 
     for (e <- dataModelNode \ "elements"; domElem <- e.child) domElem match {

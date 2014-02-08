@@ -1,7 +1,6 @@
 package ir.phsys.xview.xml
 
 import org.scalatest.FunSuite
-import ir.phsys.xview.model.ParseSomething
 
 /**
  * @author : Пуя Гуссейни
@@ -12,20 +11,6 @@ import ir.phsys.xview.model.ParseSomething
 class XmlObjectifyTest extends FunSuite {
 
   test("Test objectify") {
-    //    val o = XmlObjectify("/home/pooya/projects/I2Sc/src/main/resource")
-    //
-    //    o.onComplete {
-    //      case Failure(f) => println(f)
-    //      case Success(s) => {
-    //        printObject(s)
-    //      }
-    //
-    //    }
-    //
-    //    def printObject(p: Project) = {
-    //      println(p)
-    //    }
-    //    while (true) {}
 
   }
   test("Test regex") {
@@ -35,13 +20,7 @@ class XmlObjectifyTest extends FunSuite {
       case Pattern(x, y, z, g, h) => println(x)
       case Pattern(x) => println(x)
     }
-
-
   }
 
-  test("Test Parser") {
-    val result = ParseSomething.parseAll(ParseSomething.root, "((12-13)+2)")
-
-    println(result)
-  }
+  test("Test Parser") {  }
 }

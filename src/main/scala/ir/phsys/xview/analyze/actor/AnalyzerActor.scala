@@ -2,12 +2,13 @@ package ir.phsys.xview.analyze.actor
 
 import akka.actor.Actor
 import ir.phsys.xview.model.project.Project
-import ir.phsys.xview.analyze.exception.{AttributeNotFoundException, ApplicationNotDefinedException}
+import ir.phsys.xview.analyze.exception.AttributeNotFoundException
 import ir.phsys.xview.model.view.Page
 import ir.phsys.xview.model.datamodel.DataModel
 import ir.phsys.xview.model.layout.Layout
 import ir.phsys.xview.model.BaseModel
-import ir.phsys.xview.model.exception.DataModelNotFoundException
+import scala.util.{Failure, Success, Try}
+import ir.phsys.xview.xml.XmlObjectifyActor.{OperationSucceed, OperationFailed}
 
 /**
  * @author : Пуя Гуссейни
@@ -19,53 +20,58 @@ import ir.phsys.xview.model.exception.DataModelNotFoundException
 
 object AnalyzerActor {
 
-  case class Send(project: Project)
+  case class Analyze(project: Project)
 
 }
 
-class AnalyzerActor extends Actor {
+class AnalyzerActor(id: Int) extends Actor {
 
   import AnalyzerActor._
   import ir.phsys.xview.analyze.ConstantAttributes._
 
   def receive: Actor.Receive = {
-    case Send(p) =>
+    case Analyze(p) =>
+      Try(analyzeProject(p)) match {
+        case Success(s) => sender ! OperationSucceed(id)
+
+        case Failure(f) => sender ! OperationFailed(f)
+      }
   }
 
   def analyzeProject(project: Project) = {
-    val application = project.getApplication match {
-      case None => throw new ApplicationNotDefinedException
-      case Some(x) => x
-    }
-    val pages = (Map(application.getUniqueName -> application) ++ project.getPageMap).values.toList
+
+    val pages = project.getPages.allPages
+    //    val pages = (Map(application.getUniqueName -> application) ++ project.getPages).values.toList
 
     def checkAttributesValidity() = {
-
       checkPageAttributes(pages)
-      checkLayoutAttributes(project.getLayoutMap.values.toList)
+      checkLayoutAttributes(project.getLayouts.values.toList)
       checkDataModelAttributes(project.getDataModels.values.toList)
     }
 
     pages.foreach(page => {
       val dm = page.attributes("dataModel")
-
+      val layout = page.attributes("layout")
+      project.getDataModels.contains(dm, recursive = true)
+      project.getLayouts.contains(layout, recursive = true)
     })
 
-    pages.foreach(page => {
-      val dm = page.attributes("dataModel")
-      if (!project.getDataModelMap.contains(dm)) {
-        val inners = project.getDataModelMap.filter {
-          case (k, v) => v.hasInnerClass
-        }.map {
-                       case (k, v) => k + "." + v.getUniqueName
-                     }.toList
 
-        if (!inners.contains(dm)) {
-          throw new DataModelNotFoundException(s"Data model $dm in page ${page.getUniqueName} is not found!")
-        }
-
-      }
-    })
+    //    pages.foreach(page => {
+    //      val dm = page.attributes("dataModel")
+    //      if (!project.getDataModels.contains(dm)) {
+    //        val inners = project.getDataModels.filter {
+    //          case (k, v) => v.hasInnerClass
+    //        }.map {
+    //                       case (k, v) => k + "." + v.getUniqueName
+    //                     }.toList
+    //
+    //        if (!inners.contains(dm)) {
+    //          throw new DataModelNotFoundException(s"Data model $dm in page ${page.getUniqueName} is not found!")
+    //        }
+    //
+    //      }
+    //    })
 
 
 
@@ -100,7 +106,7 @@ class AnalyzerActor extends Actor {
       DataModelMandatoryAttributes.intersect(model.attributes.keys.toList)
       .foreach(m => throw new AttributeNotFoundException(m))
       checkElementAttributes(model.elements)
-      checkDataModelAttributes(model.definedTypes)
+      checkDataModelAttributes(model.dataModels)
     })
   }
 
