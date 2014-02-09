@@ -1,12 +1,12 @@
-<%var dataModel:ir.phsys.xview.model.datamodel.DataModel%>
+<%var dataModel:ir.phsys.xview.model.datamodel.DataModel %>
 <%--var packageName:String --%>
-package ${dataModel.attributes("domain")} ;
+<%--package ${dataModel.attributes("domain")} ;--%>
 class ${dataModel.attributes("name")} {
 #for ( field<- dataModel.elements)
-    private ${field.elemType} ${field.getAttributes()("name")};
+    private ${field.elemType} ${field.attributes("name")};
 #end
 
-#for ( field<- dataModel.elements;fieldName=field.getAttributes()("name"))
+#for ( field<- dataModel.elements;fieldName=field.attributes("name"))
     public void set${fieldName.capitalize}(${field.elemType} ${fieldName}){
         this.${fieldName}=${fieldName};
     }

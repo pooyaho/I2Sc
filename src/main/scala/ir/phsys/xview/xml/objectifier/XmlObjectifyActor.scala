@@ -93,11 +93,9 @@ class XmlObjectifyActor(analyzerActor: ActorRef, id: Int) extends Actor {
           logger.info(s"In path is ${x.getAbsolutePath}")
           val loadFile = XML.loadFile(x)
 
-
-
           loadFile.label match {
 
-            case "dataModel" =>
+            case "DataModel" =>
               for (dm <- loadFile \\ loadFile.label) {
                 val datamodel = generateDataModelGraph(dm)
                 project.getDataModels += datamodel

@@ -25,11 +25,11 @@ object AnalyzerActor {
 
   case class Analyze(project: Project)
 
-  def props(codeGeneratorActor: ActorRef, id: Int):Props = Props(new AnalyzerActor(codeGeneratorActor, id))
+  def props(codeGeneratorActor: ActorRef, id: Int): Props = Props(new AnalyzerActor(codeGeneratorActor, id))
 }
 
 class AnalyzerActor(codeGeneratorActor: ActorRef, id: Int) extends Actor {
-  val logger=Logger[this.type]
+  val logger = Logger[this.type]
 
   import AnalyzerActor._
   import ir.phsys.xview.analyze.ConstantAttributes._
@@ -40,7 +40,7 @@ class AnalyzerActor(codeGeneratorActor: ActorRef, id: Int) extends Actor {
         case Success(s) => sender ! OperationSucceed(id)
           codeGeneratorActor ! Generate(p)
         case Failure(f) =>
-          logger.warn("Failure during analyzing!",f)
+          logger.warn("Failure during analyzing!", f)
           sender ! OperationFailed(f)
       }
   }
@@ -96,21 +96,21 @@ class AnalyzerActor(codeGeneratorActor: ActorRef, id: Int) extends Actor {
 
   private def checkPageAttributes(pages: List[Page]) = {
     pages.foreach(page => {
-      PageMandatoryAttributes.intersect(page.attributes.keys.toList)
+      PageMandatoryAttributes.diff(page.attributes.keys.toList)
       .foreach(m => throw new AttributeNotFoundException(m))
       checkElementAttributes(page.widgets)
-      page.widgets.foreach(widget => {
-        widget.layout match {
-          case Some(layout) => checkLayoutAttributes(List(layout))
-          case None =>
-        }
-      })
+//      page.widgets.foreach(widget => {
+//        widget.layout match {
+//          case Some(layout) => checkLayoutAttributes(List(layout))
+//          case None =>
+//        }
+//      })
     })
   }
 
   private def checkDataModelAttributes(models: List[DataModel]): Unit = {
     models foreach (model => {
-      DataModelMandatoryAttributes.intersect(model.attributes.keys.toList)
+      DataModelMandatoryAttributes.diff(model.attributes.keys.toList)
       .foreach(m => throw new AttributeNotFoundException(m))
       checkElementAttributes(model.elements)
       checkDataModelAttributes(model.dataModels)
@@ -119,8 +119,8 @@ class AnalyzerActor(codeGeneratorActor: ActorRef, id: Int) extends Actor {
 
   private def checkLayoutAttributes(ls: List[Layout]): Unit = {
     ls.foreach(l => {
-      LayoutMandatoryAttributes.intersect(l.attributes.keys.toList)
-      .foreach(m => throw new AttributeNotFoundException(m))
+      LayoutMandatoryAttributes.diff(l.attributes.keys.toList)
+      .foreach(m => throw new AttributeNotFoundException(s"In layout ${l.attributes} and attribute $m"))
       l.gridType match {
         case Some(x) =>
           x.rows.foreach(r => {
@@ -147,7 +147,7 @@ class AnalyzerActor(codeGeneratorActor: ActorRef, id: Int) extends Actor {
 
   private def checkElementAttributes(p: List[BaseModel]) = {
     p foreach (elem => {
-      ElementMandatoryAttributes.intersect(elem.getAttributes.keys.toList)
+      ElementMandatoryAttributes.diff(elem.getAttributes.keys.toList)
       .foreach(m => throw new AttributeNotFoundException(m))
     })
   }

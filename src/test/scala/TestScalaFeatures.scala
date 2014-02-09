@@ -9,8 +9,9 @@ import scala.collection.MapLike
  */
 class TestScalaFeatures extends FunSuite {
   test("Test list minus"){
-    val result=List(1,2)-List(1)
-//    assert(result==)
+    val result=List(1,2).diff(List(1))
+    println(result)
+//    assert(result.equals(List(2)))
   }
 }
 

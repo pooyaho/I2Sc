@@ -2,43 +2,43 @@
 <application name="form1" xmlns="schemas/xviewfd.xsd"
              dataModel="com.casp.poo.Class1" domain="com.casp.pooya"
              title="title" layout="dg.layout1">
-    <layout>
-        <grid flow="horizontal">
-            <row height="12" >
-                <cell flow="horizontal">
-                    <button name="btn1" label="@firstName" enabled="true"/>
-                    <button name="btn2" label="No Label" enabled="true"/>
-                </cell>
-                <cell flow="horizontal" width="0">
-                    <button name="btn3" label="No Label" enabled="true"/>
-                    <datePicker name="fasdf" label="dg"/>
-                    <combo name="dfg" label="dg"/>
-                    <textBox name="hkg" label="h"/>
-                    <button name="nbd" label="sg"/>
-                    <layout name="layout2">
-                        <grid>
-                            <row>
-                                <cell flow="vertical">
-                                    <button name="btn4" label="No Label" enabled="true"/>
-                                    <listBox name="listbox1" label="" selectionMode="multiple"/>
+    <!--<layout>-->
+        <!--<grid flow="horizontal">-->
+            <!--<row height="12" >-->
+                <!--<cell flow="horizontal">-->
+                    <!--<button name="btn1" label="@firstName" enabled="true"/>-->
+                    <!--<button name="btn2" label="No Label" enabled="true"/>-->
+                <!--</cell>-->
+                <!--<cell flow="horizontal" width="0">-->
+                    <!--<button name="btn3" label="No Label" enabled="true"/>-->
+                    <!--<datePicker name="fasdf" label="dg"/>-->
+                    <!--<combo name="dfg" label="dg"/>-->
+                    <!--<textBox name="hkg" label="h"/>-->
+                    <!--<button name="nbd" label="sg"/>-->
+                    <!--<layout name="layout2">-->
+                        <!--<grid>-->
+                            <!--<row>-->
+                                <!--<cell flow="vertical">-->
+                                    <!--<button name="btn4" label="No Label" enabled="true"/>-->
+                                    <!--<listBox name="listbox1" label="" selectionMode="multiple"/>-->
 
-                                </cell>
-                            </row>
-                        </grid>
-                    </layout>
-                </cell>
+                                <!--</cell>-->
+                            <!--</row>-->
+                        <!--</grid>-->
+                    <!--</layout>-->
+                <!--</cell>-->
 
-            </row>
-            <row>
-                <cell>
-                    <repeater>
-                        <button name="ef" label="d"/>
-                    </repeater>
-                </cell>
-            </row>
+            <!--</row>-->
+            <!--<row>-->
+                <!--<cell>-->
+                    <!--<repeater>-->
+                        <!--<button name="ef" label="d"/>-->
+                    <!--</repeater>-->
+                <!--</cell>-->
+            <!--</row>-->
 
-        </grid>
-    </layout>
+        <!--</grid>-->
+    <!--</layout>-->
 
     <textBox name="@fisrName" label="Name" textAlignment="center" location="cell1"/>
     <button name="btn1" label="Save" enabled="false" location="cell2"/>
