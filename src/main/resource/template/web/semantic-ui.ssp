@@ -1,0 +1,46 @@
+<%@ import
+var page:ir.phsys.xview.model.view.Page%>
+
+<html>
+    <head title='${page.attributes("title")}'>
+    <script></script>
+    </head>
+    <body>
+        #{
+            val numbers=Map(
+            0 -> "zero",
+            1 -> "one" ,
+            2 -> "two",
+            3 -> "three",
+            4 -> "four",
+            5 -> "five",
+            6 -> "six",
+            7 -> "seven",
+            8 -> "eight",
+            9 -> "nine",
+            10 -> "ten",
+            11 -> "eleven",
+            12 -> "twelve",
+            13 -> "thirteen",
+            14 -> "fourteen",
+            15 -> "fifteen",
+            16 -> "sixteen"
+            )
+            val rowsSize=page.layout.get.gridType.get.rows.size
+            val columnSize=page.layout.get.gridType.get.rows.map(_.cells.size).max
+
+        }#
+        <div class="ui ${numbers(columnSize)} column grid">
+        #for(i<-page.layout.get.gridType.get.row)
+        #end
+        <div class="row">
+            <div class="column">A</div>
+            <div class="column">B</div>
+        </div>
+        <div class="row">
+            <div class="column">C</div>
+            <div class="column">D</div>
+        </div>
+        </div>
+    </body>
+</html>

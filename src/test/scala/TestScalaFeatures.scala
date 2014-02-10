@@ -1,6 +1,6 @@
+import java.io.File
 import org.scalatest.FunSuite
-import scala.collection.MapLike
-
+import sys.process._
 /**
  * @author : Пуя Гуссейни
  *         Email : info@pooya-hfp.ir
@@ -12,6 +12,12 @@ class TestScalaFeatures extends FunSuite {
     val result=List(1,2).diff(List(1))
     println(result)
 //    assert(result.equals(List(2)))
+  }
+
+  test("Test write to file"){
+
+
+
   }
 }
 

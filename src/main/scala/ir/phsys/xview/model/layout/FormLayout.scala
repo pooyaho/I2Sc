@@ -4,6 +4,7 @@ import ir.phsys.xview.model.view.Widget
 import ir.phsys.xview.model.{ModelContainer, BaseModel}
 import scala.beans.BeanProperty
 import ir.phsys.xview.model.exception.LayoutAlreadyDefinedException
+import ir.phsys.xview.analyze.exception.LayoutCellNotFoundException
 
 /**
  * @author : Пуя Гуссейни
@@ -12,12 +13,18 @@ import ir.phsys.xview.model.exception.LayoutAlreadyDefinedException
  *         Time: 4:27 PM
  */
 case class Layout(@BeanProperty var attributes: Map[String, String] = Map.empty[String, String],
-                  var gridType: Option[GridType] = None) extends BaseModel {
-  def containsInnerLayout() = gridType match {
+                  var gridType: Option[GridType]) extends BaseModel {
+
+  def putWidgetToCell(cellName: String, w: Widget) = gridType match {
     case None =>
-    case Some(x) =>
+    case Some(g) =>
+      g.rows.flatMap(c => c.cells.filter(_.attributes.contains(cellName))) match {
+        case Nil => throw new LayoutCellNotFoundException(s"Cell $cellName in layout $getUniqueName")
+        case x :: xs => x.widgets :+= w
+      }
   }
 }
+
 
 case class GridType(@BeanProperty var attributes: Map[String, String] = Map.empty[String, String],
                     var rows: List[Row] = List.empty[Row]) extends BaseModel

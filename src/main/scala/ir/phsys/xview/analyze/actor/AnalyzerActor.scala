@@ -45,66 +45,45 @@ class AnalyzerActor(codeGeneratorActor: ActorRef, id: Int) extends Actor {
       }
   }
 
-  def analyzeProject(project: Project) = {
+  def transformWidgetToLayout(project: Project) = {
+    for (p <- project.getPages.allPages;
+         layoutName = p.attributes("layout");
+         layout = project.getLayouts.get(layoutName)) {
 
-    val pages = project.getPages.allPages
-    //    val pages = (Map(application.getUniqueName -> application) ++ project.getPages).values.toList
-
-    def checkAttributesValidity() = {
-      checkPageAttributes(pages)
-      checkLayoutAttributes(project.getLayouts.values.toList)
-      checkDataModelAttributes(project.getDataModels.values.toList)
     }
 
-    pages.foreach(page => {
+  }
+
+  def analyzeProject(project: Project) = {
+    checkPageLayoutAndDataModelAvailability(project)
+    checkPageAttributes(project.getPages.allPages)
+    checkLayoutAttributes(project.getLayouts.values.toList)
+    checkDataModelAttributes(project.getDataModels.values.toList)
+
+    transformWidgetToLayout(project)
+  }
+
+  def checkPageLayoutAndDataModelAvailability(project: Project) {
+    project.getPages.allPages.foreach(page => {
       val dm = page.attributes("dataModel")
       val layout = page.attributes("layout")
       project.getDataModels.contains(dm, recursive = true)
       project.getLayouts.contains(layout, recursive = true)
     })
-
-
-    //    pages.foreach(page => {
-    //      val dm = page.attributes("dataModel")
-    //      if (!project.getDataModels.contains(dm)) {
-    //        val inners = project.getDataModels.filter {
-    //          case (k, v) => v.hasInnerClass
-    //        }.map {
-    //                       case (k, v) => k + "." + v.getUniqueName
-    //                     }.toList
-    //
-    //        if (!inners.contains(dm)) {
-    //          throw new DataModelNotFoundException(s"Data model $dm in page ${page.getUniqueName} is not found!")
-    //        }
-    //
-    //      }
-    //    })
-
-
-
-    checkAttributesValidity()
-
-    //    foreach (page => {
-    //      val dm = page.attributes("dataModel")
-    //      if (!p.getDataModelMap.contains(dm)) {
-    //        throw new DataModelNotFoundException(s"Data model $dm in page ${page.getUniqueName} is not found!")
-    //      }
-    //    })
-
-
   }
 
   private def checkPageAttributes(pages: List[Page]) = {
     pages.foreach(page => {
       PageMandatoryAttributes.diff(page.attributes.keys.toList)
       .foreach(m => throw new AttributeNotFoundException(m))
-      checkElementAttributes(page.widgets)
-//      page.widgets.foreach(widget => {
-//        widget.layout match {
-//          case Some(layout) => checkLayoutAttributes(List(layout))
-//          case None =>
-//        }
-//      })
+
+      //      checkElementAttributes(page.widgets)
+      //      page.widgets.foreach(widget => {
+      //        widget.layout match {
+      //          case Some(layout) => checkLayoutAttributes(List(layout))
+      //          case None =>
+      //        }
+      //      })
     })
   }
 

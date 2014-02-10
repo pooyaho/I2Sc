@@ -1,18 +1,20 @@
-<%var dataModel:ir.phsys.xview.model.datamodel.DataModel %>
-<%--var packageName:String --%>
-<%--package ${dataModel.attributes("domain")} ;--%>
-class ${dataModel.attributes("name")} {
-#for ( field<- dataModel.elements)
-    private ${field.elemType} ${field.attributes("name")};
+<% import ir.phsys.xview.generator.java.JavaTypes._ %>
+<%@ import var model:ir.phsys.xview.model.datamodel.DataModel %>
+
+package ${model.attributes("domain")} ;
+class ${model.attributes("name")} {
+#for ( field<- model.elements)
+    private ${typesMap (field.elemType)} ${field.attributes("name")};
 #end
 
-#for ( field<- dataModel.elements;fieldName=field.attributes("name"))
-    public void set${fieldName.capitalize}(${field.elemType} ${fieldName}){
+#for ( field<- model.elements;fieldName=field.attributes("name"))
+    public void set${fieldName.capitalize}(${typesMap (field.elemType)} ${fieldName}){
         this.${fieldName}=${fieldName};
     }
-    public ${field.elemType} get${fieldName.capitalize}(){
+
+    public ${typesMap (field.elemType)} get${fieldName.capitalize}(){
         return this.${fieldName};
     }
+
 #end
 }
-

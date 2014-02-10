@@ -105,21 +105,17 @@ class XmlObjectifyActor(analyzerActor: ActorRef, id: Int) extends Actor {
                 val app = generatePageModel(dm)
                 project.getPages.setApplication(app)
               }
-
             case "layout" =>
               for (dm <- loadFile \\ loadFile.label) {
                 val layout = generateLayoutModelGraph(dm)
                 project.getLayouts += layout
               }
-
             case "page" =>
               for (dm <- loadFile \\ loadFile.label) {
                 val app = generatePageModel(dm)
                 project.getPages += app
               }
-
             case _ =>
-
           }
       }
     }

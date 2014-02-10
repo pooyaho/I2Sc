@@ -5,7 +5,7 @@ import akka.testkit.{ImplicitSender, TestKit}
 import org.scalatest.{BeforeAndAfterAll, FunSuite}
 import org.scalatest.matchers.ShouldMatchers
 import ir.phsys.xview.xml.objectifier.XmlObjectifyActor
-import ir.phsys.xview.generator.actor.java.JavaCodeGeneratorActor
+import ir.phsys.xview.generator.java.actor.JavaCodeGeneratorActor
 
 //import ir.phsys.xview.generator.java.JavaCodeGeneratorActor
 import ir.phsys.xview.analyze.actor.AnalyzerActor

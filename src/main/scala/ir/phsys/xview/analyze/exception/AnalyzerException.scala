@@ -6,6 +6,4 @@ package ir.phsys.xview.analyze.exception
  *         Date: 2/3/14
  *         Time: 10:57 AM
  */
-class AnalyzerException(message: String) extends Exception(message) {
-  def this() = this(null)
-}
+class AnalyzerException(message: String) extends Exception(message)
