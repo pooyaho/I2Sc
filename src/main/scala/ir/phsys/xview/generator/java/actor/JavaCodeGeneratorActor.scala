@@ -1,11 +1,12 @@
 package ir.phsys.xview.generator.java.actor
 
 import akka.actor.Actor
-import ir.phsys.xview.generator.CodeGenerator.Generate
-import org.fusesource.scalate.TemplateEngine
 import java.io._
-import grizzled.slf4j.Logger
 import ir.phsys.xview.model.project.Project
+import ir.phsys.xview.generator.CodeGeneratorActor
+import ir.phsys.xview.generator.CodeGeneratorActor.Generate
+import ir.phsys.xview.generator.template.Engine
+
 
 /**
  * @author : Пуя Гуссейни
@@ -15,34 +16,28 @@ import ir.phsys.xview.model.project.Project
  */
 
 
-class JavaCodeGeneratorActor extends Actor {
-  val engine = new TemplateEngine()
+class JavaCodeGeneratorActor extends CodeGeneratorActor {
   val dataModelTemplate = "/home/pooya/projects/I2Sc/src/main/resource/template/cs/datamodel.ssp"
-  val logger = Logger[this.type]
-
 
   def receive: Actor.Receive = {
     case Generate(project) =>
       logger.info("In Java code generator!")
       generateDataModels(project)
-      generateUI(project)
+      generateViewModels(project)
   }
 
-  private def generateDataModels(project: Project) = {
+  def generateDataModels(project: Project): Unit = {
+    import ir.phsys.xview.util.io.FileUtils._
+
     for ((name, dataModel) <- project.getDataModels.getMap) {
       logger.info(s"data model $name")
-      val result = engine.layout(dataModelTemplate, Map("model" -> dataModel))
-
-      val out = new PrintWriter(
-        new File(s"/home/pooya/projects/I2Sc/src/main/resource/${dataModel.attributes("name")}.java"))
-      out.write(result)
-      out.close()
-      //        (result #> out).!
-      //        "Pooya" #> out
+      val result = Engine(dataModelTemplate, Map("model" -> dataModel))
+      val file = new File(s"/home/pooya/projects/I2Sc/src/main/resource/${dataModel.attributes("name")}.java")
+      file <# result
     }
   }
 
-  private def generateUI(project: Project) = {
-    project.getPages.getApplication
+  def generateViewModels(project: Project): Unit = {
+    ???
   }
 }

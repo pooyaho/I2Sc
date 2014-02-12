@@ -1,0 +1,138 @@
+spinner->
+    name
+    label
+    tooltip
+    enabled
+    visible
+    tabindex
+    height
+    width
+    horizontalAlignment
+    verticalAlignment
+    maxValue
+    minValue
+
+datePicker->
+    name
+    label
+    tooltip
+    enabled
+    visible
+    tabindex
+    height
+    width
+    horizontalAlignment
+    verticalAlignment
+    selectionMode
+    showNextPrevMonth
+    showDayHeader
+
+button->
+    name
+    label
+    tooltip
+    enabled
+    visible
+    tabindex
+    height
+    width
+    horizontalAlignment
+    verticalAlignment
+
+combo->
+    name
+    label
+    tooltip
+    enabled
+    visible
+    tabindex
+    height
+    width
+    horizontalAlignment
+    verticalAlignment
+    source
+
+checkBox->
+    name
+    label
+    tooltip
+    enabled
+    visible
+    tabindex
+    height
+    width
+    horizontalAlignment
+    verticalAlignment
+    checked
+
+
+radioButton->
+    name
+    label
+    tooltip
+    enabled
+    visible
+    tabindex
+    height
+    width
+    horizontalAlignment
+    verticalAlignment
+    checked
+    groupName
+
+
+image->
+    name
+    label
+    tooltip
+    enabled
+    visible
+    tabindex
+    height
+    width
+    horizontalAlignment
+    verticalAlignment
+    src
+    alt
+
+
+label->
+    name
+    label
+    tooltip
+    enabled
+    visible
+    tabindex
+    height
+    width
+    horizontalAlignment
+    verticalAlignment
+
+listBox->
+    name
+    label
+    tooltip
+    enabled
+    visible
+    tabindex
+    height
+    width
+    horizontalAlignment
+    verticalAlignment
+    source
+    selectionMode=single|multiple
+
+
+textBox->
+    name
+    label
+    tooltip
+    enabled
+    visible
+    tabindex
+    height
+    width
+    horizontalAlignment
+    verticalAlignment
+    readonly
+    textAlignment

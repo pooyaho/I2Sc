@@ -1,6 +1,7 @@
-<%@ import
-var page:ir.phsys.xview.model.view.Page%>
-
+<%@ import var page:ir.phsys.xview.model.view.Page%>
+#{
+    import ir.phsys.xview.model.view.web.semanticui.WidgetConversion._
+}#
 <html>
     <head title='${page.attributes("title")}'>
     <script></script>
@@ -28,19 +29,19 @@ var page:ir.phsys.xview.model.view.Page%>
             )
             val rowsSize=page.layout.get.gridType.get.rows.size
             val columnSize=page.layout.get.gridType.get.rows.map(_.cells.size).max
-
         }#
         <div class="ui ${numbers(columnSize)} column grid">
-        #for(i<-page.layout.get.gridType.get.row)
+        #for(row<-page.layout.get.gridType.get.rows)
+            <div class="row">
+            #for (cell<-row.cells)
+                <div class="column">
+                #for(w<-cell.widgets)
+                    ${unescape(w.extractText())}
+                #end
+                </div>
+            #end
+            </div>
         #end
-        <div class="row">
-            <div class="column">A</div>
-            <div class="column">B</div>
-        </div>
-        <div class="row">
-            <div class="column">C</div>
-            <div class="column">D</div>
-        </div>
         </div>
     </body>
 </html>

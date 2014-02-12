@@ -5,9 +5,10 @@ import akka.testkit.{ImplicitSender, TestKit}
 import org.scalatest.{BeforeAndAfterAll, FunSuite}
 import org.scalatest.matchers.ShouldMatchers
 import ir.phsys.xview.xml.objectifier.XmlObjectifyActor
-import ir.phsys.xview.generator.java.actor.JavaCodeGeneratorActor
+import ir.phsys.xview.generator.web.actor.WebCodeGenerator
 
 //import ir.phsys.xview.generator.java.JavaCodeGeneratorActor
+
 import ir.phsys.xview.analyze.actor.AnalyzerActor
 import ir.phsys.xview.xml.objectifier.XmlObjectifyActor.Objectify
 
@@ -25,7 +26,7 @@ class ActorsTest(_system: ActorSystem) extends TestKit(
   override def afterAll(): Unit = system.shutdown()
 
   test("Run actors") {
-    val generator = system.actorOf(Props[JavaCodeGeneratorActor])
+    val generator = system.actorOf(Props[WebCodeGenerator])
     val analyzer = system.actorOf(AnalyzerActor.props(generator, 1))
     val objectifier = system.actorOf(XmlObjectifyActor.props(analyzer, 2))
 

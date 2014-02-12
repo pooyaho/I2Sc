@@ -1,0 +1,3 @@
+<%@ import var widgetType:String%>
+<%@ import var widgetAttributes:Map[String,String]%>
+<${widgetType} #for((k,v)<-widgetAttributes)  ${k}="${v}" #end />

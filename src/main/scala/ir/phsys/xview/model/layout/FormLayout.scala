@@ -13,7 +13,7 @@ import ir.phsys.xview.analyze.exception.LayoutCellNotFoundException
  *         Time: 4:27 PM
  */
 case class Layout(@BeanProperty var attributes: Map[String, String] = Map.empty[String, String],
-                  var gridType: Option[GridType]) extends BaseModel {
+                  var gridType: Option[GridType] = None) extends BaseModel {
 
   def putWidgetToCell(cellName: String, w: Widget) = gridType match {
     case None =>

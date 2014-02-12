@@ -22,10 +22,8 @@ class Pages extends ModelContainer[String, Page] {
 
   def +=(m: Page): Unit = {
     // it does not check inner classes
-    if (map.contains(m.getUniqueName) ||
-      (application.isDefined && application.get.getUniqueName == m.getUniqueName))
+    if (map.contains(m.getUniqueName) || (application.isDefined && application.get.getUniqueName == m.getUniqueName))
       throw new PageAlreadyDefinedException(s"Page ${m.getUniqueName}")
-
 
     nameSet += m.getUniqueName
     map ++= Map(m.getUniqueName -> m)
@@ -43,7 +41,7 @@ class Pages extends ModelContainer[String, Page] {
 
   def getApplication = application
 
-  def allPages:List[Page] = (if (isApplicationDefined) {
+  def allPages: List[Page] = (if (isApplicationDefined) {
     Map(application.get.getUniqueName -> application.get) ++ map
   } else {
     map

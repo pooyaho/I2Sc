@@ -10,8 +10,8 @@ import ir.phsys.xview.model.BaseModel
 import scala.util.{Failure, Success, Try}
 import ir.phsys.xview.xml.objectifier.XmlObjectifyActor
 import XmlObjectifyActor.{OperationSucceed, OperationFailed}
-import ir.phsys.xview.generator.CodeGenerator.Generate
 import grizzled.slf4j.Logger
+import ir.phsys.xview.generator.CodeGeneratorActor.Generate
 
 /**
  * @author : Пуя Гуссейни
