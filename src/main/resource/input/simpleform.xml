@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application name="form1" xmlns="schemas/xviewfd.xsd"
+<page name="form1" xmlns="xviewfd.xsd"
              dataModel="com.casp.poo.Class1" domain="com.casp.pooya"
-             title="title" layout="dg.layout1">
+             title="title" >
     <layout>
         <grid flow="horizontal">
-            <row height="12" >
-                <cell flow="horizontal">
+            <row >
+                <cell>
                     <button name="btn1" label="@firstName" enabled="true"/>
                     <button name="btn2" label="No Label" enabled="true"/>
                 </cell>
@@ -35,7 +35,6 @@
                     </repeater>
                 </cell>
             </row>
-
         </grid>
     </layout>
 
@@ -53,4 +52,4 @@
         <!--</layout>-->
     <!--</repeater>-->
 
-</application>
+</page>

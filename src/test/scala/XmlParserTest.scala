@@ -1,6 +1,4 @@
-import ir.phsys.xview.model.layout.{Cell, Row, GridType, Layout}
-import ir.phsys.xview.model.view.{Page, Widget}
-import org.scalatest.FunSuite
+
 
 /**
  * @author : Пуя Гуссейни
@@ -12,6 +10,9 @@ import org.scalatest.FunSuite
 
 import scala.xml._
 import ir.phsys.xview.xml.util.DomUtils._
+import ir.phsys.xview.model.layout.{Cell, Row, GridType, Layout}
+import ir.phsys.xview.model.view.{Page, Widget}
+import org.scalatest.FunSuite
 
 class XmlParserTest extends FunSuite {
   test("Test layout xml") {

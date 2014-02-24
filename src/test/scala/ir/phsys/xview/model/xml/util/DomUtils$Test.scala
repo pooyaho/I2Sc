@@ -86,6 +86,13 @@ class DomUtils$Test extends FunSuite {
 
 
   test("Test data model xml using map") {
+
+
+    val a=List(("a","b","c"),("c","d","e"))
+    val b=a.flatten.groupBy(identity)
+
+    println(b)
+
     //    for (domModel <- content \\ "dataModel") {
     //
     //      val dm = new DataModel

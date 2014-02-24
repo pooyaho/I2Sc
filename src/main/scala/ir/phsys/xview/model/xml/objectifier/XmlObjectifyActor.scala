@@ -21,18 +21,16 @@ import ir.phsys.xview.model.layout.Cell
 import ir.phsys.xview.model.layout.Row
 import scala.util.Success
 import ir.phsys.xview.model.view.Widget
-import ir.phsys.xview.analyze.actor.AnalyzerActor.Analyze
 import grizzled.slf4j.Logger
+
 
 object XmlObjectifyActor {
 
   case class Objectify(path: String)
 
-  class OperationReplay
+  case class ObjectifySuccess(p: Project, id: Int)
 
-  case class OperationFailed(t: Throwable) extends OperationReplay
-
-  case class OperationSucceed(id: Int) extends OperationReplay
+  case class ObjectifyFailure(f: Throwable)
 
   //    lst
   //    (XmlObjectify.loadFile \\ "dataModel").map {
@@ -87,14 +85,13 @@ class XmlObjectifyActor(analyzerActor: ActorRef, id: Int) extends Actor {
     def recursiveIterateDirectory(path: String): Unit = {
       logger.info(s"Path is $path")
 
-      new File(path).listFiles().filter(p=>p.getName.endsWith(".xml")).foreach {
+      new File(path).listFiles().filter(p => p.getName.endsWith(".xml")).foreach {
         case x if x.isDirectory => recursiveIterateDirectory(x.getCanonicalPath)
         case x if !x.isDirectory =>
           logger.info(s"In path is ${x.getAbsolutePath}")
           val loadFile = XML.loadFile(x)
 
           loadFile.label match {
-
             case "DataModel" =>
               for (dm <- loadFile \\ loadFile.label) {
                 val datamodel = generateDataModelGraph(dm)
@@ -213,9 +210,12 @@ class XmlObjectifyActor(analyzerActor: ActorRef, id: Int) extends Actor {
     case Objectify(path) =>
       val project = generateProject(path)
       project match {
-        case Success(s) => sender ! OperationSucceed
-          analyzerActor ! Analyze(s)
-        case Failure(f) => sender ! OperationFailed(f)
+        case Success(s) =>
+          sender ! ObjectifySuccess(s, id)
+        case Failure(f) => sender ! ObjectifyFailure(f)
       }
+//    case OperationSuccess =>
+//      logger.info("Success in objectifier actor")
+//      sender ! OperationSuccess
   }
 }

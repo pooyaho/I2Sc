@@ -12,6 +12,9 @@ object FileUtils {
 
   implicit class FileWriter(f: File) {
     def <#(str: String): Unit = {
+      if (!f.exists())
+        f.createNewFile()
+
       val out = new PrintWriter(f)
       out.write(str)
       out.close()

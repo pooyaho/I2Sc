@@ -1,7 +1,6 @@
 package ir.phsys.xview.generator
 
 import akka.actor.Actor
-import org.fusesource.scalate.TemplateEngine
 import grizzled.slf4j.Logger
 import ir.phsys.xview.model.project.Project
 
@@ -13,11 +12,11 @@ import ir.phsys.xview.model.project.Project
  */
 object CodeGeneratorActor {
 
-  case class Generate(project: Project)
+  case class CodeGenerate(path: String, project: Project)
 
-  case object OperationSuccess
+  case class CodeGenSuccess(id: Int)
 
-  case object OperationFailed
+  case class CodeGenFailure(t: Throwable)
 
 }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <app:DataModel name="Class1" domain="com.casp.poo"
-               xmlns:app="/home/pooya/projects/I2Sc/src/main/resource/schemas/xview-dm.xsd">
+               xmlns:app="xview-dm.xsd">
     <app:DataModel name="AddressType">
         <app:elements>
             <app:integer name="zipcode">

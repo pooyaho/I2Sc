@@ -1,0 +1,32 @@
+<%@ import
+var page:ir.phsys.xview.model.view.Page%>
+#{
+    import ir.phsys.xview.model.view.web.semanticui.WidgetConversion._
+}#
+<html>
+<head>
+<link rel="stylesheet" href="bootstrap-3.1.1-dist/css/bootstrap.min.css">
+
+<link rel="stylesheet" href="bootstrap-3.1.1-dist/css/bootstrap-theme.min.css">
+
+    <script src="bootstrap-3.1.1-dist/js/bootstrap.min.js"></script>
+</head>
+<body>
+    #{
+
+    }#
+    #for(row<-page.layout.get.gridType.get.rows)
+        <div class="row">
+        #{
+            val cols=row.cells.map(c=>c.attributes.getOrElse("colSpan","1").toInt).sum
+            val colValue=12 / cols
+        }#
+        #for(cell<-row.cells)
+            <div class='col-lg-${cell.attributes.getOrElse("colSpan","1").toInt * colValue}'>
+
+            </div>
+        #end
+        </div>
+    #end
+</body>
+</html>

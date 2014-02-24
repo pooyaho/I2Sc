@@ -1,6 +1,6 @@
 package ir.phsys.xview.analyze.actor
 
-import akka.actor.{Props, ActorRef, Actor}
+import akka.actor.{Props, Actor}
 import ir.phsys.xview.model.project.Project
 import ir.phsys.xview.analyze.exception.AttributeNotFoundException
 import ir.phsys.xview.model.view.Page
@@ -8,10 +8,7 @@ import ir.phsys.xview.model.datamodel.DataModel
 import ir.phsys.xview.model.layout.Layout
 import ir.phsys.xview.model.BaseModel
 import scala.util.{Failure, Success, Try}
-import ir.phsys.xview.xml.objectifier.XmlObjectifyActor
-import XmlObjectifyActor.{OperationSucceed, OperationFailed}
 import grizzled.slf4j.Logger
-import ir.phsys.xview.generator.CodeGeneratorActor.Generate
 
 /**
  * @author : Пуя Гуссейни
@@ -25,10 +22,14 @@ object AnalyzerActor {
 
   case class Analyze(project: Project)
 
-  def props(codeGeneratorActor: ActorRef, id: Int): Props = Props(new AnalyzerActor(codeGeneratorActor, id))
+  case class AnalyzeSuccess(id: Int, project: Project)
+
+  case class AnalyzeFailure(t: Throwable)
+
+  def props(id: Int): Props = Props(new AnalyzerActor(id))
 }
 
-class AnalyzerActor(codeGeneratorActor: ActorRef, id: Int) extends Actor {
+class AnalyzerActor(id: Int) extends Actor {
   val logger = Logger[this.type]
 
   import AnalyzerActor._
@@ -37,21 +38,24 @@ class AnalyzerActor(codeGeneratorActor: ActorRef, id: Int) extends Actor {
   def receive: Actor.Receive = {
     case Analyze(p) =>
       Try(analyzeProject(p)) match {
-        case Success(s) => sender ! OperationSucceed(id)
-          codeGeneratorActor ! Generate(p)
+        case Success(s) => sender ! AnalyzeSuccess(id, p)
+        //          codeGeneratorActor ! Generate(p)
         case Failure(f) =>
           logger.warn("Failure during analyzing!", f)
-          sender ! OperationFailed(f)
+          sender ! AnalyzeFailure(f)
       }
+    //    case OperationSuccess =>
+    //      logger.info("Success in analyzer")
+    //      sender ! OperationSuccess
   }
 
   def transformWidgetToLayout(project: Project) = {
-    for (p <- project.getPages.allPages;
-         layoutName = p.attributes("layout");
-         layout = project.getLayouts.get(layoutName)) {
-
-    }
-
+    //    for (p <- project.getPages.allPages;
+    //         layoutName = p.attributes.get("layout");
+    //         layout = project.getLayouts.get(layoutName)) {
+    //
+    //    }
+    //todo complete it
   }
 
   def analyzeProject(project: Project) = {
@@ -59,16 +63,21 @@ class AnalyzerActor(codeGeneratorActor: ActorRef, id: Int) extends Actor {
     checkPageAttributes(project.getPages.allPages)
     checkLayoutAttributes(project.getLayouts.values.toList)
     checkDataModelAttributes(project.getDataModels.values.toList)
-
     transformWidgetToLayout(project)
   }
 
   def checkPageLayoutAndDataModelAvailability(project: Project) {
     project.getPages.allPages.foreach(page => {
       val dm = page.attributes("dataModel")
-      val layout = page.attributes("layout")
+
       project.getDataModels.contains(dm, recursive = true)
-      project.getLayouts.contains(layout, recursive = true)
+
+      page.attributes.get("layout") match {
+        case Some(layout) =>
+          project.getLayouts.contains(layout, recursive = true)
+        case None =>
+      }
+
     })
   }
 
@@ -114,10 +123,8 @@ class AnalyzerActor(codeGeneratorActor: ActorRef, id: Int) extends Actor {
                   case Some(layout) => checkLayoutAttributes(List(layout))
                   case None =>
                 }
-
               })
             })
-
           })
         case None =>
       }
@@ -130,5 +137,5 @@ class AnalyzerActor(codeGeneratorActor: ActorRef, id: Int) extends Actor {
       .foreach(m => throw new AttributeNotFoundException(m))
     })
   }
-
 }
+

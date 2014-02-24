@@ -6,6 +6,7 @@ import ir.phsys.xview.model.project.Project
 import ir.phsys.xview.generator.CodeGeneratorActor
 import ir.phsys.xview.generator.CodeGeneratorActor.Generate
 import ir.phsys.xview.generator.template.Engine
+import scala.util.{Failure, Success, Try}
 
 
 /**
@@ -16,14 +17,24 @@ import ir.phsys.xview.generator.template.Engine
  */
 
 
-class JavaCodeGeneratorActor extends CodeGeneratorActor {
+class JavaCodeGeneratorActor(id:Int) extends CodeGeneratorActor {
+  import CodeGeneratorActor._
+
   val dataModelTemplate = "/home/pooya/projects/I2Sc/src/main/resource/template/cs/datamodel.ssp"
 
   def receive: Actor.Receive = {
     case Generate(project) =>
       logger.info("In Java code generator!")
-      generateDataModels(project)
-      generateViewModels(project)
+      Try({
+        generateDataModels(project)
+        generateViewModels(project)
+      }) match {
+        case Success(s) =>
+          sender ! CodeGenSuccess(id)
+        case Failure(f) =>
+          sender! CodeGenFailure(f)
+      }
+
   }
 
   def generateDataModels(project: Project): Unit = {
