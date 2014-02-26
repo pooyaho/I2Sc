@@ -89,9 +89,9 @@ class DomUtils$Test extends FunSuite {
 
 
     val a=List(("a","b","c"),("c","d","e"))
-    val b=a.flatten.groupBy(identity)
-
-    println(b)
+//    val b=a.flatten.groupBy(identity)
+//
+//    println(b)
 
     //    for (domModel <- content \\ "dataModel") {
     //

@@ -12,7 +12,7 @@ import ir.phsys.xview.xml.util.DomUtils._
 import ir.phsys.xview.model.layout._
 import ir.phsys.xview.model.datamodel.{Restriction, Element, DataModel}
 import ir.phsys.xview.model.project.Project
-import akka.actor.{Props, ActorRef, Actor}
+import akka.actor.{Props, Actor}
 import scala.util.Try
 import ir.phsys.xview.model.layout.GridType
 import ir.phsys.xview.model.view.Page
@@ -59,10 +59,10 @@ object XmlObjectifyActor {
   //        new DataModel(model.getAttributeAsMap, elements.flatten)
   //      }
   //    }
-  def props(analyzerActor: ActorRef, id: Int): Props = Props(new XmlObjectifyActor(analyzerActor, id))
+  def props(id: Int): Props = Props(new XmlObjectifyActor(id))
 }
 
-class XmlObjectifyActor(analyzerActor: ActorRef, id: Int) extends Actor {
+class XmlObjectifyActor(id: Int) extends Actor {
   val logger = Logger[this.type]
 
   import java.io.File

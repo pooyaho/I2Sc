@@ -12,21 +12,33 @@ var page:ir.phsys.xview.model.view.Page%>
     <script src="bootstrap-3.1.1-dist/js/bootstrap.min.js"></script>
 </head>
 <body>
-    #{
+    <%
+        def getLayout(l:ir.phsys.xview.model.layout.Layout):String={
+        var str=""
 
-    }#
-    #for(row<-page.layout.get.gridType.get.rows)
-        <div class="row">
-        #{
-            val cols=row.cells.map(c=>c.attributes.getOrElse("colSpan","1").toInt).sum
-            val colValue=12 / cols
-        }#
-        #for(cell<-row.cells)
-            <div class='col-lg-${cell.attributes.getOrElse("colSpan","1").toInt * colValue}'>
+        for(row<-l.gridType.get.rows){
+        str += """<div class="row">"""
 
-            </div>
-        #end
-        </div>
-    #end
+        val cols=row.cells.map(c=>c.attributes.getOrElse("colSpan","1").toInt).sum
+        val colValue=12 / cols
+
+        for(cell<-row.cells){
+        str += """<div class='col-lg-""" + cell.attributes.getOrElse("colSpan","1").toInt * colValue + "'>"
+        cell.layout match {
+        case None=>
+        case Some(layout)=>str += getLayout(layout)
+        }
+        str += "</div>"
+        }
+        str += "</div>"
+        }
+        str
+        }
+
+    %>
+
+    ${unescape(getLayout(page.layout.get))}
+
+
 </body>
 </html>

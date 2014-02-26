@@ -4,7 +4,6 @@ import akka.actor.Actor
 import java.io._
 import ir.phsys.xview.model.project.Project
 import ir.phsys.xview.generator.CodeGeneratorActor
-import ir.phsys.xview.generator.CodeGeneratorActor.Generate
 import ir.phsys.xview.generator.template.Engine
 import scala.util.{Failure, Success, Try}
 
@@ -17,13 +16,14 @@ import scala.util.{Failure, Success, Try}
  */
 
 
-class JavaCodeGeneratorActor(id:Int) extends CodeGeneratorActor {
+class JavaCodeGeneratorActor(id: Int) extends CodeGeneratorActor {
+
   import CodeGeneratorActor._
 
   val dataModelTemplate = "/home/pooya/projects/I2Sc/src/main/resource/template/cs/datamodel.ssp"
 
   def receive: Actor.Receive = {
-    case Generate(project) =>
+    case CodeGenerate(path, project) =>
       logger.info("In Java code generator!")
       Try({
         generateDataModels(project)
@@ -32,7 +32,7 @@ class JavaCodeGeneratorActor(id:Int) extends CodeGeneratorActor {
         case Success(s) =>
           sender ! CodeGenSuccess(id)
         case Failure(f) =>
-          sender! CodeGenFailure(f)
+          sender ! CodeGenFailure(f)
       }
 
   }

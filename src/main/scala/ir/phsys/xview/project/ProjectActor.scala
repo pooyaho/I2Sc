@@ -1,6 +1,6 @@
 package ir.phsys.xview.project
 
-import akka.actor.{ActorRef, Actor}
+import akka.actor.{Props, ActorRef, Actor}
 import ir.phsys.xview.xml.objectifier.XmlObjectifyActor.{ObjectifySuccess, Objectify}
 import ir.phsys.xview.generator.CodeGeneratorActor.{CodeGenerate, CodeGenSuccess}
 import ir.phsys.xview.analyze.actor.AnalyzerActor.{Analyze, AnalyzeSuccess}
@@ -21,6 +21,8 @@ object ProjectActor {
 
   case class OperationSucceed(id: Int) extends OperationReplay
 
+  case object TotalOperationSucceed extends OperationReplay
+
   case class Initialize(analyzerActor: ActorRef, objectifierActor: ActorRef, codeGenActor: ActorRef)
 
   case class ChangeAnalyzerActor(analyzerActor: ActorRef)
@@ -31,16 +33,19 @@ object ProjectActor {
 
   case class ProcessPath(inputPath: String, outputPath: String = null)
 
+  def props(id: Int): Props = Props(new ProjectActor(id))
 }
 
-class ProjectActor extends Actor {
+class ProjectActor(id:Int) extends Actor {
 
   import ir.phsys.xview.project.ProjectActor._
 
-//  private var actorsMap = Map.empty[Int, ActorRef]
+  //  private var actorsMap = Map.empty[Int, ActorRef]
   private var analyzerActor: Option[ActorRef] = None
   private var objectifierActor: Option[ActorRef] = None
   private var codeGenActor: Option[ActorRef] = None
+  private var inputPath = ""
+  private var outputPath = ""
 
   def receive: Actor.Receive = {
     case Initialize(a, o, c) =>
@@ -58,19 +63,19 @@ class ProjectActor extends Actor {
       analyzerActor = Some(a)
 
     case ProcessPath(input, output) =>
+      inputPath = input
+      outputPath = output
       objectifierActor.get ! Objectify(input)
 
-    case ObjectifySuccess(p, id) =>
+    case ObjectifySuccess(p, i) =>
       analyzerActor.get ! Analyze(p)
 
-    case CodeGenSuccess(id) =>
-
-
-    case AnalyzeSuccess(id, p) =>
-      codeGenActor.get ! CodeGenerate()
+    case CodeGenSuccess(i) =>
+      println("Total process successfully completed!")
+      OperationSucceed(id)
+    case AnalyzeSuccess(i, p) =>
+      codeGenActor.get ! CodeGenerate(outputPath, p)
   }
 
   def checkActors = objectifierActor.isDefined && analyzerActor.isDefined && codeGenActor.isDefined
-
-
 }
