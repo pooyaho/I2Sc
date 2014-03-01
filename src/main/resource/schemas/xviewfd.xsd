@@ -122,7 +122,7 @@
         <xs:attribute type="xs:string" name="tooltip" use="optional"/>
         <xs:attribute type="xs:boolean" name="enabled" use="optional"/>
         <xs:attribute type="xs:boolean" name="visible" use="optional"/>
-        <xs:attribute type="xs:nonNegativeInteger" name="tabindex" use="optional"/>
+        <xs:attribute type="xs:integer" name="tabindex" use="optional"/>
         <xs:attribute type="xs:positiveInteger" name="height" use="optional"/>
         <xs:attribute type="xs:positiveInteger" name="width" use="optional"/>
         <xs:attribute type="xs:string" name="horizontalAlignment" use="optional"/>

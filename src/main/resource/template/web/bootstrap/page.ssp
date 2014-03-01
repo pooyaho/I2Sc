@@ -1,44 +1,65 @@
-<%@ import
-var page:ir.phsys.xview.model.view.Page%>
+<%@ import var page:ir.phsys.xview.model.view.Page%>
 #{
-    import ir.phsys.xview.model.view.web.semanticui.WidgetConversion._
+    import ir.phsys.xview.model.view.web.angular.WidgetConverted._
+    import ir.phsys.xview.model.view.web.angular.WidgetConversion._
+    import ir.phsys.xview.model.view.Widget
 }#
-<html>
+<html data-bootstrapui>
+
 <head>
-<link rel="stylesheet" href="bootstrap-3.1.1-dist/css/bootstrap.min.css">
-
-<link rel="stylesheet" href="bootstrap-3.1.1-dist/css/bootstrap-theme.min.css">
-
-    <script src="bootstrap-3.1.1-dist/js/bootstrap.min.js"></script>
+<title>${page.getAttributes.getOrElse("title","")}</title>
+<meta charset="UTF-8"/>
+<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="../css/theme.css"/>
+    <script src="../js/config.js"></script>
+    <script src="../js/jquery-1.11.0.js"></script>
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
+    <script src="../js/angular.js"></script>
+    <script src="../js/bootstrapui-0.4.js"></script>
+    <script src="../js/demo.js"></script>
 </head>
 <body>
+
     <%
         def getLayout(l:ir.phsys.xview.model.layout.Layout):String={
         var str=""
 
         for(row<-l.gridType.get.rows){
-        str += """<div class="row">"""
+            str += """<div class="row">"""
 
-        val cols=row.cells.map(c=>c.attributes.getOrElse("colSpan","1").toInt).sum
-        val colValue=12 / cols
+            val cols=row.cells.map(c=>c.attributes.getOrElse("colSpan","1").toInt).sum
+            val colValue=12 / cols
 
-        for(cell<-row.cells){
-        str += """<div class='col-lg-""" + cell.attributes.getOrElse("colSpan","1").toInt * colValue + "'>"
-        cell.layout match {
-        case None=>
-        case Some(layout)=>str += getLayout(layout)
-        }
-        str += "</div>"
-        }
-        str += "</div>"
+            for(cell<-row.cells){
+                str += """<div class='col-lg-""" + cell.attributes.getOrElse("colSpan","1").toInt * colValue + "'>"
+                cell.layout match {
+                    case None=>
+                        for(w<-cell.widgets){
+                            val wc=w.convert()
+                            wc.widgetName
+                        }
+                    case Some(layout)=>str += getLayout(layout)
+                }
+                str += "</div>"
+            }
+            str += "</div>"
         }
         str
         }
-
+        def getWidget(w:Widget):String={
+            val wc=w.convert()
+            val name=wc._1
+            val attrs=wc._2
+        var str=s"<$name "
+            for(att<-attrs){
+                str +=s"${att.toString} "
+            }
+            str+=s"> </$name>"
+            str
+        }
     %>
 
     ${unescape(getLayout(page.layout.get))}
-
 
 </body>
 </html>

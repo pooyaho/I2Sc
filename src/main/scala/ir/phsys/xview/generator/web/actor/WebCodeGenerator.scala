@@ -23,13 +23,14 @@ class WebCodeGenerator(id: Int) extends CodeGeneratorActor {
 
   import ir.phsys.xview.util.io.FileUtils._
 
-  val viewModel = "/home/pooya/projects/I2Sc/src/main/resource/template/web/bootstrap/page.ssp"
+  val viewTemplate = "/home/pooya/projects/I2Sc/src/main/resource/template/web/bootstrap/page.ssp"
+  val widgetTemplate = "/home/pooya/projects/I2Sc/src/main/resource/template/web/bootstrap/widget.ssp"
 
   def receive: Actor.Receive = {
     case CodeGenerate(path, p) =>
       Try(
         for (page <- p.getPages.allPages) {
-          val result = Engine(viewModel, Map("page" -> page))
+          val result = Engine(viewTemplate, Map("page" -> page))
 
           new File(s"$path/${page.attributes("name")}.html") <# result
         }
