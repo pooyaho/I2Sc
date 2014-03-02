@@ -19,47 +19,32 @@
     <script src="../js/demo.js"></script>
 </head>
 <body>
+#{ def getLayout(l:ir.phsys.xview.model.layout.Layout) { }#
 
-    <%
-        def getLayout(l:ir.phsys.xview.model.layout.Layout):String={
-        var str=""
-
-        for(row<-l.gridType.get.rows){
-            str += """<div class="row">"""
-
+    #for(row<-l.gridType.get.rows)
+        <div class="row">
+        #{
             val cols=row.cells.map(c=>c.attributes.getOrElse("colSpan","1").toInt).sum
             val colValue=12 / cols
+        }#
+        #for(cell<-row.cells)
+            <div class='col-lg-${cell.attributes.getOrElse("colSpan","1").toInt * colValue }'>
+            #match(cell.layout)
+                #case (None)
+                    #for(w<-cell.widgets)
+                        #{val wc = w.convert()}#
+                        <ui:${wc._1} #for(at<-wc._2) ${at.toString} #end ></ui:${wc._1}>
+                    #end
+                #case (Some(lyt))
+                    ${getLayout(lyt)}
+            #end
+            </div>
 
-            for(cell<-row.cells){
-                str += """<div class='col-lg-""" + cell.attributes.getOrElse("colSpan","1").toInt * colValue + "'>"
-                cell.layout match {
-                    case None=>
-                        for(w<-cell.widgets){
-                            val wc=w.convert()
-                            wc.widgetName
-                        }
-                    case Some(layout)=>str += getLayout(layout)
-                }
-                str += "</div>"
-            }
-            str += "</div>"
-        }
-        str
-        }
-        def getWidget(w:Widget):String={
-            val wc=w.convert()
-            val name=wc._1
-            val attrs=wc._2
-        var str=s"<$name "
-            for(att<-attrs){
-                str +=s"${att.toString} "
-            }
-            str+=s"> </$name>"
-            str
-        }
-    %>
+        #end
+    </div>
+    #end
 
-    ${unescape(getLayout(page.layout.get))}
-
+<%}%>
+${getLayout(page.layout.get)}
 </body>
 </html>

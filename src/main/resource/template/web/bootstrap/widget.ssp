@@ -3,5 +3,8 @@
     import ir.phsys.xview.model.view.web.angular.Attribute
 }#
 <%@ import var attributes:List[Attribute]%>
-<${widgetName} #for(at<-attributes) ${at.toString} #end
+<${widgetName}
+#for(at<-attributes)
+    ${at.toString}
+#end
 ></${widgetName}>

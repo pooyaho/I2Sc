@@ -120,7 +120,7 @@
         <xs:attribute type="main:nameType" name="name" use="required"/>
         <xs:attribute type="xs:string" name="label" use="optional"/>
         <xs:attribute type="xs:string" name="tooltip" use="optional"/>
-        <xs:attribute type="xs:boolean" name="enabled" use="optional"/>
+        <xs:attribute type="xs:boolean" name="enable" use="optional"/>
         <xs:attribute type="xs:boolean" name="visible" use="optional"/>
         <xs:attribute type="xs:integer" name="tabindex" use="optional"/>
         <xs:attribute type="xs:positiveInteger" name="height" use="optional"/>

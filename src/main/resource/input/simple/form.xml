@@ -5,27 +5,27 @@
         <grid>
             <row>
                 <cell>
-                    <button name="btn1" label="@firstName" enabled="true"/>
+                    <textBox name="btn1" label="@firstName"/>
                 </cell>
                 <cell>
-                    <button name="btn3" label="No Label" enabled="true"/>
+                    <textBox name="btn3" label="No Label" visible="false" tabindex="1"/>
                 </cell>
                 <cell>
-                    <button name="btn4" label="No Label" enabled="true"/>
+                    <textBox name="btn4" label="No Label" enable="false"/>
                 </cell>
             </row>
             <row>
                 <cell colSpan="2">
-                    <button name="btn5" label="No Label" enabled="true"/>
+                    <textBox name="btn5" label="No Label"/>
                 </cell>
                 <cell>
-                    <button name="btn6" label="No Label" enabled="true"/>
+                    <textBox name="btn6" label="No Label"/>
                 </cell>
             </row>
 
             <row>
                 <cell colSpan="3">
-                    <button name="btn7" label="No Label" enabled="true"/>
+                    <textBox name="btn7" label="No Label"/>
                 </cell>
             </row>
 
@@ -35,20 +35,19 @@
                         <grid>
                             <row>
                                 <cell>
-                                    <button name="something"/>
+                                    <textBox name="something"/>
                                 </cell>
                             </row>
                         </grid>
                     </layout>
                 </cell>
                 <cell>
-                    <button name="btn7" label="No Label" enabled="true"/>
+                    <textBox name="btn7" label="No Label"/>
                 </cell>
                 <cell>
-                    <button name="btn7" label="No Label" enabled="true"/>
+                    <textBox name="btn7" label="No Label"/>
                 </cell>
             </row>
         </grid>
     </layout>
-
 </application>

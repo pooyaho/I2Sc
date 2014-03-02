@@ -26,11 +26,11 @@ import grizzled.slf4j.Logger
 
 object XmlObjectifyActor {
 
-  case class Objectify(path: String)
+  case class Objectify(path: String, jobId: Int)
 
-  case class ObjectifySuccess(p: Project, id: Int)
+  case class ObjectifySuccess(p: Project, jobId: Int)
 
-  case class ObjectifyFailure(f: Throwable)
+  case class ObjectifyFailure(f: Throwable, jobId: Int)
 
   //    lst
   //    (XmlObjectify.loadFile \\ "dataModel").map {
@@ -59,10 +59,10 @@ object XmlObjectifyActor {
   //        new DataModel(model.getAttributeAsMap, elements.flatten)
   //      }
   //    }
-  def props(id: Int): Props = Props(new XmlObjectifyActor(id))
+  def props: Props = Props(new XmlObjectifyActor)
 }
 
-class XmlObjectifyActor(id: Int) extends Actor {
+class XmlObjectifyActor extends Actor {
   val logger = Logger[this.type]
 
   import java.io.File
@@ -207,15 +207,15 @@ class XmlObjectifyActor(id: Int) extends Actor {
   }
 
   def receive: Actor.Receive = {
-    case Objectify(path) =>
+    case Objectify(path, jid) =>
       val project = generateProject(path)
       project match {
         case Success(s) =>
-          sender ! ObjectifySuccess(s, id)
-        case Failure(f) => sender ! ObjectifyFailure(f)
+          sender ! ObjectifySuccess(s, jid)
+        case Failure(f) => sender ! ObjectifyFailure(f, jid)
       }
-//    case OperationSuccess =>
-//      logger.info("Success in objectifier actor")
-//      sender ! OperationSuccess
+    //    case OperationSuccess =>
+    //      logger.info("Success in objectifier actor")
+    //      sender ! OperationSuccess
   }
 }

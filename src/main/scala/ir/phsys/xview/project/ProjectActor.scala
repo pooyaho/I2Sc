@@ -2,8 +2,17 @@ package ir.phsys.xview.project
 
 import akka.actor.{Props, ActorRef, Actor}
 import ir.phsys.xview.xml.objectifier.XmlObjectifyActor.{ObjectifySuccess, Objectify}
-import ir.phsys.xview.generator.CodeGeneratorActor.{CodeGenerate, CodeGenSuccess}
+import ir.phsys.xview.generator.CodeGeneratorActor.{CodeGenFailure, GenerateCode, CodeGenSuccess}
 import ir.phsys.xview.analyze.actor.AnalyzerActor.{Analyze, AnalyzeSuccess}
+import grizzled.slf4j.Logger
+import java.io.{FileOutputStream, FileInputStream, File}
+import java.nio.file.StandardCopyOption.REPLACE_EXISTING
+import java.nio.file.Files.copy
+import java.nio.file.Paths.get
+
+
+
+
 
 
 /**
@@ -17,11 +26,11 @@ object ProjectActor {
 
   class OperationReplay
 
-  case class OperationFailed(t: Throwable) extends OperationReplay
+  case class TotalOperationFailed(t: Throwable, jobId: Int) extends OperationReplay
 
-  case class OperationSucceed(id: Int) extends OperationReplay
+  //  case object OperationSucceed extends OperationReplay
 
-  case object TotalOperationSucceed extends OperationReplay
+  case class TotalOperationSucceed(jobId: Int) extends OperationReplay
 
   case class Initialize(analyzerActor: ActorRef, objectifierActor: ActorRef, codeGenActor: ActorRef)
 
@@ -31,12 +40,12 @@ object ProjectActor {
 
   case class ChangeCodeGenActor(codeGenActor: ActorRef)
 
-  case class ProcessPath(inputPath: String, outputPath: String = null)
+  case class ProcessPath(inputPath: String, outputPath: String = null, jobId: Int)
 
   def props(id: Int): Props = Props(new ProjectActor(id))
 }
 
-class ProjectActor(id:Int) extends Actor {
+class ProjectActor(id: Int) extends Actor {
 
   import ir.phsys.xview.project.ProjectActor._
 
@@ -46,6 +55,8 @@ class ProjectActor(id:Int) extends Actor {
   private var codeGenActor: Option[ActorRef] = None
   private var inputPath = ""
   private var outputPath = ""
+  private var sendersMap = Map.empty[Int, ActorRef]
+  private val logger = Logger[this.type]
 
   def receive: Actor.Receive = {
     case Initialize(a, o, c) =>
@@ -62,20 +73,41 @@ class ProjectActor(id:Int) extends Actor {
     case ChangeAnalyzerActor(a) =>
       analyzerActor = Some(a)
 
-    case ProcessPath(input, output) =>
+    case ProcessPath(input, output, jid) =>
       inputPath = input
       outputPath = output
-      objectifierActor.get ! Objectify(input)
+      objectifierActor.get ! Objectify(input, jid)
 
-    case ObjectifySuccess(p, i) =>
-      analyzerActor.get ! Analyze(p)
+      sendersMap ++= Map(jid -> sender)
 
-    case CodeGenSuccess(i) =>
-      println("Total process successfully completed!")
-      OperationSucceed(id)
-    case AnalyzeSuccess(i, p) =>
-      codeGenActor.get ! CodeGenerate(outputPath, p)
+    case ObjectifySuccess(p, jId) =>
+      analyzerActor.get ! Analyze(p, jId)
+
+    case CodeGenSuccess(jid) =>
+      logger.info("Total process completes successfully!")
+      sendersMap(jid) ! TotalOperationSucceed(jid)
+
+    case CodeGenFailure(t, jid) =>
+      logger.warn("Total process failure!")
+      sendersMap(jid) ! TotalOperationFailed(t, jid)
+
+    case AnalyzeSuccess(p, jId) =>
+      codeGenActor.get ! GenerateCode(outputPath, p, jId)
+
   }
 
   def checkActors = objectifierActor.isDefined && analyzerActor.isDefined && codeGenActor.isDefined
+  implicit def toPath (filename: String) = get(filename)
+
+//  def copyFilesToOutput(input:String,output:String)={
+//    val addresses=new File(input).listFiles().filter(p=> !p.getName.endsWith("xml"))
+//
+//    addresses.foreach(src=>{
+//      val dest=new File(output)
+//
+//      new FileOutputStream(dest) getChannel() transferFrom(
+//        new FileInputStream(src).getChannel, 0, Long.MaxValue )
+//    })
+//
+//  }
 }

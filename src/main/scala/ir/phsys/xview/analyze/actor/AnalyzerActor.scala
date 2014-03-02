@@ -20,29 +20,29 @@ import grizzled.slf4j.Logger
 
 object AnalyzerActor {
 
-  case class Analyze(project: Project)
+  case class Analyze(project: Project, jobId: Int)
 
-  case class AnalyzeSuccess(id: Int, project: Project)
+  case class AnalyzeSuccess(project: Project, jobId: Int)
 
-  case class AnalyzeFailure(t: Throwable)
+  case class AnalyzeFailure(t: Throwable, jobId: Int)
 
-  def props(id: Int): Props = Props(new AnalyzerActor(id))
+  def props: Props = Props(new AnalyzerActor)
 }
 
-class AnalyzerActor(id: Int) extends Actor {
+class AnalyzerActor extends Actor {
   val logger = Logger[this.type]
 
   import AnalyzerActor._
   import ir.phsys.xview.analyze.ConstantAttributes._
 
   def receive: Actor.Receive = {
-    case Analyze(p) =>
+    case Analyze(p, jid) =>
       Try(analyzeProject(p)) match {
-        case Success(s) => sender ! AnalyzeSuccess(id, p)
+        case Success(s) => sender ! AnalyzeSuccess(p, jid)
         //          codeGeneratorActor ! Generate(p)
         case Failure(f) =>
           logger.warn("Failure during analyzing!", f)
-          sender ! AnalyzeFailure(f)
+          sender ! AnalyzeFailure(f, jid)
       }
     //    case OperationSuccess =>
     //      logger.info("Success in analyzer")
@@ -138,4 +138,3 @@ class AnalyzerActor(id: Int) extends Actor {
     })
   }
 }
-

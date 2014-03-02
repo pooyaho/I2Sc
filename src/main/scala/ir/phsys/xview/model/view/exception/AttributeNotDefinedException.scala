@@ -6,6 +6,5 @@ package ir.phsys.xview.model.view.exception
  *         Date: 01.03.14
  *         Time: 16:21
  */
-class AttributeNotDefinedException extends Exception{
+class AttributeNotDefinedException extends Exception
 
-}

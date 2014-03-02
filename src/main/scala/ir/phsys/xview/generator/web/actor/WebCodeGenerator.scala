@@ -7,6 +7,7 @@ import ir.phsys.xview.generator.CodeGeneratorActor._
 import ir.phsys.xview.generator.template.Engine
 import java.io.File
 import scala.util.{Failure, Success, Try}
+import scala.xml.PrettyPrinter
 
 /**
  * @author : Пуя Гуссейни
@@ -16,10 +17,10 @@ import scala.util.{Failure, Success, Try}
  */
 
 object WebCodeGenerator {
-  def props(id: Int): Props = Props(new WebCodeGenerator(id))
+  def props: Props = Props(new WebCodeGenerator)
 }
 
-class WebCodeGenerator(id: Int) extends CodeGeneratorActor {
+class WebCodeGenerator extends CodeGeneratorActor {
 
   import ir.phsys.xview.util.io.FileUtils._
 
@@ -27,18 +28,19 @@ class WebCodeGenerator(id: Int) extends CodeGeneratorActor {
   val widgetTemplate = "/home/pooya/projects/I2Sc/src/main/resource/template/web/bootstrap/widget.ssp"
 
   def receive: Actor.Receive = {
-    case CodeGenerate(path, p) =>
+    case GenerateCode(path, p, jid) =>
       Try(
         for (page <- p.getPages.allPages) {
           val result = Engine(viewTemplate, Map("page" -> page))
+//          val printer=new PrettyPrinter(90,2)
 
           new File(s"$path/${page.attributes("name")}.html") <# result
         }
       ) match {
         case Success(s) =>
-          sender ! CodeGenSuccess(id)
+          sender ! CodeGenSuccess(jid)
         case Failure(f) =>
-          sender ! CodeGenFailure(f)
+          sender ! CodeGenFailure(f, jid)
       }
   }
 

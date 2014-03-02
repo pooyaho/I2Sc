@@ -13,6 +13,7 @@ import ir.phsys.xview.project.ProjectActor._
 
 import ir.phsys.xview.analyze.actor.AnalyzerActor
 import scala.concurrent.duration._
+
 /**
  * @author : Пуя Гуссейни
  *         Email : info@pooya-hfp.ir
@@ -30,16 +31,17 @@ class ActorsTest(_system: ActorSystem) extends TestKit(_system)
   override def afterAll(): Unit = system.shutdown()
 
   test("Run actors") {
-    val generator = system.actorOf(WebCodeGenerator.props(1))
-    val analyzer = system.actorOf(AnalyzerActor.props(2))
-    val objectifier = system.actorOf(XmlObjectifyActor.props(3))
-    val project = system.actorOf(ProjectActor.props(4))
-
+    val generator = system.actorOf(WebCodeGenerator.props)
+    val analyzer = system.actorOf(AnalyzerActor.props)
+    val objectifier = system.actorOf(XmlObjectifyActor.props)
+    val project = system.actorOf(ProjectActor.props(1))
+    val jobId = 1
     project ! Initialize(analyzer, objectifier, generator)
 
-    project ! ProcessPath("/home/pooya/projects/I2Sc/src/main/resource/input/simple","/home/pooya/projects/I2Sc/src/main/resource/input/simple")
+    project ! ProcessPath("/home/pooya/projects/I2Sc/src/main/resource/input/simple",
+      "/home/pooya/projects/I2Sc/src/main/resource/input/simple", jobId)
 
     //    objectifier ! Objectify("/home/pooya/projects/I2Sc/src/main/resource/input/simple")
-    expectMsg(20 seconds,TotalOperationSucceed)
+    expectMsg(100 seconds, TotalOperationSucceed(jobId))
   }
 }

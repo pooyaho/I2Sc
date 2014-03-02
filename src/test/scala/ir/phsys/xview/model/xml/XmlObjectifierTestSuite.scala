@@ -25,11 +25,11 @@ class XmlObjectifierTestSuite(_system: ActorSystem) extends TestKit(
   override def afterAll: Unit = system.shutdown()
 
   test("test path") {
-    val objectifier = system.actorOf(Props[XmlObjectifyActor])
-    objectifier ! Objectify("/home/pooya/projects/I2Sc/src/main/resource/input/simple")
-
-    val project = receiveOne(10 seconds)
-    println(project)
+//    val objectifier = system.actorOf(Props[XmlObjectifyActor])
+//    objectifier ! Objectify("/home/pooya/projects/I2Sc/src/main/resource/input/simple")
+//
+//    val project = receiveOne(10 seconds)
+//    println(project)
 //    expectMsgType[OperationSucceed](10 seconds)
   }
 }

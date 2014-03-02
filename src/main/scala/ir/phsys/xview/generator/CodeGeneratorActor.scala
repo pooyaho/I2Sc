@@ -12,11 +12,12 @@ import ir.phsys.xview.model.project.Project
  */
 object CodeGeneratorActor {
 
-  case class CodeGenerate(path: String, project: Project)
+  case class GenerateCode(path: String, project: Project, jobId: Int)
 
-  case class CodeGenSuccess(id: Int)
+  case class CodeGenSuccess(jobId: Int)
 
-  case class CodeGenFailure(t: Throwable)
+  case class CodeGenFailure(t: Throwable, jobId: Int)
+
 
 }
 

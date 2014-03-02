@@ -22,7 +22,7 @@ case class HtmlAttribute(key: String = null, value: String = null) extends Attri
     case (null, null) => ""
     case (k, null) => s"$k"
     case (k, "") => s"$k"
-    case (k, v) => s"$k=$v"
+    case (k, v) => s"$k='$v'"
   }
 }
 
@@ -33,18 +33,18 @@ object WidgetConversion {
     "radioButton" -> WidgetConverted("form-input", Map("type" -> "radio")),
     "label" -> WidgetConverted("form-input", Map("type" -> "static")),
     "listBox" -> WidgetConverted("form-select", Map("type" -> "list")),
-    "text" -> WidgetConverted("form-input", Map("type" -> "text"))
+    "textBox" -> WidgetConverted("form-input", Map("type" -> "text"))
   )
 
-  private def generalAttributes(attr: Attribute): Attribute = {
+  private def generalAttributes(attr: Attribute): Attribute = attr match {
     case HtmlAttribute("name", v) => HtmlAttribute("id", v)
     case HtmlAttribute("label", v) => HtmlAttribute("label", v)
-    case HtmlAttribute("enable", "true") => HtmlAttribute("")
+//    case HtmlAttribute("enable", "true") => HtmlAttribute("")
     case HtmlAttribute("enable", "false") => HtmlAttribute("disabled", "")
     case HtmlAttribute("visible", v) => HtmlAttribute("visible", v)
     case HtmlAttribute("tabindex", v) => HtmlAttribute("tabindex", v)
-    case HtmlAttribute("height", v) => HtmlAttribute("")
-    case HtmlAttribute("width", v) => HtmlAttribute("")
+//    case HtmlAttribute("height", v) => HtmlAttribute("")
+//    case HtmlAttribute("width", v) => HtmlAttribute("")
     case _ => HtmlAttribute()
   }
 
@@ -70,7 +70,7 @@ object WidgetConversion {
       }
     },
 
-    "text" -> new Function[Attribute, Attribute] {
+    "textBox" -> new Function[Attribute, Attribute] {
       def apply(v1: Attribute): Attribute = v1 match {
         case HtmlAttribute("textAlignment", "left") => HtmlAttribute("text-alignment", "left")
         case HtmlAttribute("textAlignment", "right") => HtmlAttribute("text-alignment", "right")
@@ -85,15 +85,17 @@ object WidgetConversion {
     def convert(): (String, Set[Attribute]) = {
       val wc = WidgetsMap(w.widgetType)
       var attributes = Set.empty[Attribute]
-      attributes ++= wc.attributes.toList
+      attributes ++= wc.attributes.map {
+        case (k, v) => HtmlAttribute(k, v)
+      }
 
-      attributes ++= w.attributes.map(p => {
+      val tempAttr= w.attributes.map(p => {
         val attr = HtmlAttribute(p._1, p._2)
         List(generalAttributes(attr), widgetAttributes(w.widgetType)(attr))
-      })
+      }).flatten
 
+      attributes ++=tempAttr
       (wc.widgetName, attributes)
     }
   }
-
 }
