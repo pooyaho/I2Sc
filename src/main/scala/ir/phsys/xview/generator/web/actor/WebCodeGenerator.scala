@@ -7,7 +7,6 @@ import ir.phsys.xview.generator.CodeGeneratorActor._
 import ir.phsys.xview.generator.template.Engine
 import java.io.File
 import scala.util.{Failure, Success, Try}
-import scala.xml.PrettyPrinter
 
 /**
  * @author : Пуя Гуссейни

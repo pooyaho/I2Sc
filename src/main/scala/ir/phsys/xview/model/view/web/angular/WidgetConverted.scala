@@ -11,7 +11,6 @@ case class WidgetConverted(widgetName: String, attributes: Map[String, String])
 
 import ir.phsys.xview.model.view.Widget
 
-
 trait Attribute {
   def toString: String
 }

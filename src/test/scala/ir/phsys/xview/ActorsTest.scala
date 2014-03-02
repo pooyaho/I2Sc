@@ -39,7 +39,7 @@ class ActorsTest(_system: ActorSystem) extends TestKit(_system)
     project ! Initialize(analyzer, objectifier, generator)
 
     project ! ProcessPath("/home/pooya/projects/I2Sc/src/main/resource/input/simple",
-      "/home/pooya/projects/I2Sc/src/main/resource/input/simple", jobId)
+      "/home/pooya/projects/I2Sc/src/main/resource/output", jobId)
 
     //    objectifier ! Objectify("/home/pooya/projects/I2Sc/src/main/resource/input/simple")
     expectMsg(100 seconds, TotalOperationSucceed(jobId))

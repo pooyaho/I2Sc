@@ -138,7 +138,6 @@
             <xs:extension base="main:baseAttributes">
                 <xs:attribute type="xs:string" name="source" use="optional"/>
             </xs:extension>
-
         </xs:complexContent>
     </xs:complexType>
 
@@ -188,7 +187,9 @@
 
     <xs:complexType name="LabelType">
         <xs:complexContent>
-            <xs:extension base="main:baseAttributes"/>
+            <xs:extension base="main:baseAttributes">
+                <xs:attribute type="main:TextAlignment" name="textAlignment" use="optional"/>
+            </xs:extension>
         </xs:complexContent>
     </xs:complexType>
 
@@ -197,6 +198,7 @@
             <xs:extension base="main:baseAttributes">
                 <xs:attribute type="xs:integer" name="maxValue" use="optional"/>
                 <xs:attribute type="xs:integer" name="minValue" use="optional"/>
+                <xs:attribute type="xs:integer" name="step" use="optional"/>
                 <xs:attribute type="xs:string" name="type" use="optional"/>
             </xs:extension>
         </xs:complexContent>
@@ -215,6 +217,7 @@
             <xs:extension base="main:baseAttributes">
                 <xs:attribute type="xs:boolean" name="readonly" use="optional"/>
                 <xs:attribute type="main:TextAlignment" name="textAlignment" use="optional"/>
+                <xs:attribute type="xs:string" name="format" use="optional"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
