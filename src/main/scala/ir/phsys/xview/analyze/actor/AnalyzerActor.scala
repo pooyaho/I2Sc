@@ -37,9 +37,13 @@ class AnalyzerActor extends Actor {
 
   def receive: Actor.Receive = {
     case Analyze(p, jid) =>
+      logger.info("Start analyzing!")
       Try(analyzeProject(p)) match {
-        case Success(s) => sender ! AnalyzeSuccess(p, jid)
+        case Success(s) =>
+          sender ! AnalyzeSuccess(p, jid)
+          logger.info("Analyzing successfully finished!")
         //          codeGeneratorActor ! Generate(p)
+
         case Failure(f) =>
           logger.warn("Failure during analyzing!", f)
           sender ! AnalyzeFailure(f, jid)
@@ -68,16 +72,17 @@ class AnalyzerActor extends Actor {
 
   def checkPageLayoutAndDataModelAvailability(project: Project) {
     project.getPages.allPages.foreach(page => {
-      val dm = page.attributes("dataModel")
 
-      project.getDataModels.contains(dm, recursive = true)
-
+      page.attributes.get("dataModel") match {
+        case Some(dm) =>
+          project.getDataModels.contains(dm, recursive = true)
+        case None =>
+      }
       page.attributes.get("layout") match {
         case Some(layout) =>
           project.getLayouts.contains(layout, recursive = true)
         case None =>
       }
-
     })
   }
 

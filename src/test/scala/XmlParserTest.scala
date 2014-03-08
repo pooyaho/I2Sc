@@ -16,11 +16,11 @@ import org.scalatest.FunSuite
 
 class XmlParserTest extends FunSuite {
   test("Test layout xml") {
-    val file = XML.loadFile("/home/pooya/projects/I2Sc/src/main/resource/layout.xml")
+    val file = XML.loadFile("/home/pooya/projects/I2Sc/src/main/resource/input/layout.xml")
 
-    for (l <- file \\ "layout") {
-      val layout = extractLayout(l)
-      println(layout)
+    for (l <- file \\ "_" filterNot (_.label == "cell")) {
+      //      val layout = extractLayout(l)
+      println(l)
     }
   }
   test("Test form xml") {

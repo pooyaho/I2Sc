@@ -8,10 +8,8 @@
 
     <xs:complexType name="rowType">
         <xs:sequence>
-            <xs:element type="main:colType" name="cell" maxOccurs="unbounded" minOccurs="1"
-                        xmlns:main="xviewfd.xsd"/>
+            <xs:element type="main:colType" name="cell" maxOccurs="unbounded" minOccurs="1" xmlns:main="xviewfd.xsd"/>
         </xs:sequence>
-
         <xs:attribute type="xs:positiveInteger" name="height" use="optional"/>
     </xs:complexType>
 
@@ -181,6 +179,7 @@
             <xs:extension base="main:baseAttributes">
                 <xs:attribute type="xs:string" name="src" use="optional"/>
                 <xs:attribute type="xs:string" name="alt" use="optional"/>
+                <xs:attribute type="xs:base64Binary" name="content" use="optional"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -243,23 +242,26 @@
         </xs:restriction>
     </xs:simpleType>
 
-
     <xs:group name="BaseWidgetsGroup">
         <xs:sequence>
             <xs:element name="spinner" type="main:SpinnerType" minOccurs="0"/>
             <xs:element name="datePicker" type="main:DatePickerType" minOccurs="0"/>
             <xs:element name="button" type="main:ButtonType" minOccurs="0"/>
-            <xs:element name="combo" type="main:ComboBoxType" minOccurs="0"/>
+            <xs:element name="comboBox" type="main:ComboBoxType" minOccurs="0"/>
             <xs:element name="checkBox" type="main:CheckBoxType" minOccurs="0"/>
             <xs:element name="radioButton" type="main:RadioButtonType" minOccurs="0"/>
             <xs:element name="image" type="main:ImageType" minOccurs="0"/>
             <xs:element name="label" type="main:LabelType" minOccurs="0"/>
             <xs:element name="listBox" type="main:ListBoxType" minOccurs="0"/>
             <xs:element name="textBox" type="main:TextBoxType" minOccurs="0"/>
+            <xs:element name="grid" type="main:GridType" minOccurs="0"/>
+            <xs:element name="container" type="main:ContainerType" minOccurs="0"/>
             <!--<xs:element name="layout" type="main:layoutType" minOccurs="0"/>-->
             <!--<xs:element name="repeater" type="main:BaseWidgetsExtended" minOccurs="0"/>-->
-            <xs:element name="repeater" type="main:RepeaterType" minOccurs="0"/>
+            <!--<xs:element name="repeater" type="main:RepeaterType" minOccurs="0"/>-->
+
         </xs:sequence>
+
     </xs:group>
 
 
@@ -270,23 +272,57 @@
     <!--</xs:choice>-->
     <!--</xs:sequence>-->
     <!--</xs:complexType>-->
-    <xs:complexType name="RepeaterType">
-        <xs:complexContent>
-            <xs:extension base="main:BaseWidgetsExtended">
-                <xs:attributeGroup ref="main:baseAttributesGroup"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
+    <!--<xs:complexType name="RepeaterType">-->
+    <!--<xs:complexContent>-->
+    <!--<xs:extension base="main:BaseWidgetsExtended">-->
+    <!--<xs:attributeGroup ref="main:baseAttributesGroup"/>-->
+    <!--</xs:extension>-->
+    <!--</xs:complexContent>-->
+    <!--</xs:complexType>-->
 
 
     <xs:complexType name="BaseWidgetsExtended">
         <xs:sequence>
             <xs:group ref="main:BaseWidgetsGroup"/>
             <xs:element name="layout" type="main:layoutType" minOccurs="0"/>
-
         </xs:sequence>
     </xs:complexType>
     <!--<xs:group name="InnerWidgetGroups">-->
     <!--<xs:element name="layout" type="main:layoutType" minOccurs="0"/>-->
     <!--</xs:group>-->
+    <xs:complexType name="GridType">
+        <xs:complexContent>
+            <xs:extension base="main:baseAttributes">
+                <xs:sequence>
+                    <xs:element type="main:ColumnDefinition" name="columns" minOccurs="0" maxOccurs="1"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ColumnDefinition">
+        <xs:sequence>
+            <xs:group ref="main:BaseWidgetsGroup"/>
+            <!--<xs:group type="main:BaseWidgetsExtended" name="columns" minOccurs="0" maxOccurs="1"/>-->
+        </xs:sequence>
+        <!--<xs:sequence>-->
+        <!--<xs:choice maxOccurs="unbounded" minOccurs="1">-->
+        <!--<xs:group ref="main:BaseWidgetsGroup">-->
+
+        <!--</xs:group>-->
+        <!--</xs:choice>-->
+        <!--</xs:sequence>-->
+    </xs:complexType>
+
+    <xs:complexType name="ContainerType">
+        <xs:complexContent>
+            <xs:extension base="main:baseAttributes">
+                <xs:sequence>
+                    <xs:choice>
+                        <xs:group ref="main:BaseWidgetsGroup"/>
+                        <xs:element name="layout" type="main:layoutType" minOccurs="0"/>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
 </xs:schema>

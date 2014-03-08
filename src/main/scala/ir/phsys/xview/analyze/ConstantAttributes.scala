@@ -7,7 +7,7 @@ package ir.phsys.xview.analyze
  *         Time: 11:08 AM
  */
 object ConstantAttributes {
-  lazy val PageMandatoryAttributes = List("domain", "name", "dataModel")
+  lazy val PageMandatoryAttributes = List("domain", "name")
   lazy val DataModelMandatoryAttributes = List("name")
   lazy val ElementMandatoryAttributes = List("name")
   lazy val LayoutMandatoryAttributes = DataModelMandatoryAttributes

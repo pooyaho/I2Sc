@@ -1,6 +1,6 @@
 <%@ import var page:ir.phsys.xview.model.view.Page%>
 #{
-    import ir.phsys.xview.model.view.web.angular.WidgetConverted._
+
     import ir.phsys.xview.model.view.web.angular.WidgetConversion._
     import ir.phsys.xview.model.view.Widget
 }#
@@ -9,14 +9,14 @@
 <head>
 <title>${page.getAttributes.getOrElse("title","")}</title>
 <meta charset="UTF-8"/>
-<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.css"/>
-<link rel="stylesheet" type="text/css" href="../css/theme.css"/>
-    <script src="../js/config.js"></script>
-    <script src="../js/jquery-1.11.0.js"></script>
-    <script src="../bootstrap/js/bootstrap.min.js"></script>
-    <script src="../js/angular.js"></script>
-    <script src="../js/bootstrapui-0.4.js"></script>
-    <script src="../js/demo.js"></script>
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="css/theme.css"/>
+    <script src="js/config.js"></script>
+    <script src="js/jquery-1.11.0.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/angular.js"></script>
+    <script src="js/bootstrapui-0.4.js"></script>
+    <script src="js/demo.js"></script>
 </head>
 <body>
 #{ def getLayout(l:ir.phsys.xview.model.layout.Layout) { }#
@@ -32,8 +32,11 @@
             #match(cell.layout)
                 #case (None)
                     #for(w<-cell.widgets)
-                        #{val wc = w.convert()}#
-                        <ui:${wc._1} #for(at<-wc._2) ${at.toString} #end ></ui:${wc._1}>
+                        ${w.convert()}
+                        <%--#{val wc = w.convert()}#--%>
+                        <%--<ui:form-container>--%>
+                            <%--<ui:${wc._1} #for(at<-wc._2) ${at.toString} #end ></ui:${wc._1}>--%>
+                        <%--</ui:form-container>--%>
                     #end
                 #case (Some(lyt))
                     ${getLayout(lyt)}

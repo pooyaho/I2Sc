@@ -30,7 +30,7 @@ object XmlObjectifyActor {
 
   case class ObjectifySuccess(p: Project, jobId: Int)
 
-  case class ObjectifyFailure(f: Throwable, jobId: Int)
+  case class ObjectifyFailure(t: Throwable, jobId: Int)
 
   //    lst
   //    (XmlObjectify.loadFile \\ "dataModel").map {
@@ -93,26 +93,31 @@ class XmlObjectifyActor extends Actor {
 
           loadFile.label match {
             case "DataModel" =>
+              logger.info(s"${loadFile.label} found in $path")
               for (dm <- loadFile \\ loadFile.label) {
                 val datamodel = generateDataModelGraph(dm)
                 project.getDataModels += datamodel
               }
             case "application" =>
+              logger.info(s"${loadFile.label} found in $path")
               for (dm <- loadFile \\ loadFile.label) {
                 val app = generatePageModel(dm)
                 project.getPages.setApplication(app)
               }
             case "layout" =>
+              logger.info(s"${loadFile.label} found in $path")
               for (dm <- loadFile \\ loadFile.label) {
                 val layout = generateLayoutModelGraph(dm)
                 project.getLayouts += layout
               }
             case "page" =>
+              logger.info(s"${loadFile.label} found in $path")
               for (dm <- loadFile \\ loadFile.label) {
                 val app = generatePageModel(dm)
                 project.getPages += app
               }
             case _ =>
+              logger.info(s"Unknown tag was found in $path")
           }
       }
     }
@@ -172,6 +177,21 @@ class XmlObjectifyActor extends Actor {
       app.widgets :+= widget
     })
     app
+  }
+
+  def getWidget(w: Node): Widget = {
+    val widget = new Widget
+    widget.attributes = w.getAttributeAsMap
+    widget.widgetType = w.label
+    val childs = w \ "_"
+    for (l <- childs filter (_.label == "layout")) {
+      widget.layout = Some(generateLayoutModelGraph(l))
+    }
+
+    for (inner <- childs filterNot (_.label == "layout")) {
+      widget.innerWidgets :+= getWidget(inner)
+    }
+    widget
   }
 
   def generateLayoutModelGraph(node: Node): Layout = {

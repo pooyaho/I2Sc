@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application name="form1" xmlns="xviewfd.xsd"
-             domain="com.casp.pooya" dataModel="com.casp.poo.Class1" title="title">
+<page name="form1" xmlns="xviewfd.xsd" domain="com.casp.pooya" title="title">
     <layout>
         <grid>
             <row>
@@ -10,44 +9,16 @@
                 <cell>
                     <textBox name="btn3" label="No Label" visible="false" tabindex="1"/>
                 </cell>
-                <cell>
-                    <textBox name="btn4" label="No Label" enable="false"/>
-                </cell>
             </row>
             <row>
-                <cell colSpan="2">
-                    <textBox name="btn5" label="No Label"/>
+                <cell>
+                    <textBox name="btn4" label="@firstName"/>
                 </cell>
                 <cell>
-                    <textBox name="btn6" label="No Label"/>
+                    <textBox name="btn6" label="No Label" visible="false" tabindex="1"/>
                 </cell>
             </row>
 
-            <row>
-                <cell colSpan="3">
-                    <textBox name="btn7" label="No Label"/>
-                </cell>
-            </row>
-
-            <row>
-                <cell>
-                    <layout>
-                        <grid>
-                            <row>
-                                <cell>
-                                    <textBox name="something"/>
-                                </cell>
-                            </row>
-                        </grid>
-                    </layout>
-                </cell>
-                <cell>
-                    <textBox name="btn7" label="No Label"/>
-                </cell>
-                <cell>
-                    <textBox name="btn7" label="No Label"/>
-                </cell>
-            </row>
         </grid>
     </layout>
-</application>
+</page>

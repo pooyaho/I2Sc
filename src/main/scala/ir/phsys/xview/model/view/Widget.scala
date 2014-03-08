@@ -11,6 +11,9 @@ import ir.phsys.xview.model.layout.Layout
  *         Time: 4:27 PM
  */
 case class Widget(var widgetType: String = "",
-                  @BeanProperty var attributes: Map[String, String] = Map.empty[String, String],
-                  var layout: Option[Layout] = None)
+
+                  @BeanProperty
+                  var attributes: Map[String, String] = Map.empty[String, String],
+                  var layout: Option[Layout] = None,
+                  var innerWidgets: List[Widget] = List.empty[Widget])
   extends BaseModel

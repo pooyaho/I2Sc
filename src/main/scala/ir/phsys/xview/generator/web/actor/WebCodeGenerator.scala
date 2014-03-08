@@ -7,6 +7,7 @@ import ir.phsys.xview.generator.CodeGeneratorActor._
 import ir.phsys.xview.generator.template.Engine
 import java.io.File
 import scala.util.{Failure, Success, Try}
+import grizzled.slf4j.Logger
 
 /**
  * @author : Пуя Гуссейни
@@ -26,19 +27,24 @@ class WebCodeGenerator extends CodeGeneratorActor {
   val viewTemplate = "/home/pooya/projects/I2Sc/src/main/resource/template/web/bootstrap/page.ssp"
   val widgetTemplate = "/home/pooya/projects/I2Sc/src/main/resource/template/web/bootstrap/widget.ssp"
 
+
+
   def receive: Actor.Receive = {
     case GenerateCode(path, p, jid) =>
+      logger.info("Started generating code!")
       Try(
         for (page <- p.getPages.allPages) {
           val result = Engine(viewTemplate, Map("page" -> page))
-//          val printer=new PrettyPrinter(90,2)
+          //          val printer=new PrettyPrinter(90,2)
 
           new File(s"$path/${page.attributes("name")}.html") <# result
         }
       ) match {
         case Success(s) =>
+          logger.info("Generating code successfully finished!")
           sender ! CodeGenSuccess(jid)
         case Failure(f) =>
+          logger.info("Generating code failed with error!")
           sender ! CodeGenFailure(f, jid)
       }
   }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<layout xmlns="/home/pooya/projects/I2Sc/src/main/resource/schemas/xview-ld.xsd" name="layout1" domain="dg">
+<layout xmlns="xview-ld.xsd" name="layout1" domain="dg">
     <grid>
         <row>
             <cell colSpan="1" name="cell1"/>

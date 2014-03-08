@@ -1,0 +1,1 @@
+<ui:form-select #for(key<-attributes.keySet;value=attributes.get(key)) ${key}='${value}' #end></ui:form-select>

@@ -1,7 +1,7 @@
 package ir.phsys.xview.project
 
 import akka.actor.{Props, ActorRef, Actor}
-import ir.phsys.xview.xml.objectifier.XmlObjectifyActor.{ObjectifySuccess, Objectify}
+import ir.phsys.xview.xml.objectifier.XmlObjectifyActor.{ObjectifyFailure, ObjectifySuccess, Objectify}
 import ir.phsys.xview.generator.CodeGeneratorActor.{CodeGenFailure, GenerateCode, CodeGenSuccess}
 import ir.phsys.xview.analyze.actor.AnalyzerActor.{Analyze, AnalyzeSuccess}
 import grizzled.slf4j.Logger
@@ -83,6 +83,10 @@ class ProjectActor(id: Int) extends Actor {
     case ObjectifySuccess(p, jId) =>
       analyzerActor.get ! Analyze(p, jId)
 
+    case ObjectifyFailure(t, jId) =>
+      logger.info("Total process failed!")
+      sendersMap(jId) ! TotalOperationFailed(t, jId)
+
     case CodeGenSuccess(jid) =>
       logger.info("Total process completes successfully!")
       sendersMap(jid) ! TotalOperationSucceed(jid)
@@ -94,6 +98,7 @@ class ProjectActor(id: Int) extends Actor {
     case AnalyzeSuccess(p, jId) =>
       codeGenActor.get ! GenerateCode(outputPath, p, jId)
 
+    case _ =>
   }
 
   def checkActors = objectifierActor.isDefined && analyzerActor.isDefined && codeGenActor.isDefined

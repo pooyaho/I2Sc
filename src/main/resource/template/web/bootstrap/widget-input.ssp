@@ -1,0 +1,1 @@
+<ui:form-input #for(key<-attributes.keySet;value=attributes.get(key)) ${key}='${value}' #end></ui:form-input>
